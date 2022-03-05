@@ -3,6 +3,8 @@
 require_relative 'square'
 
 class Board
+  attr_reader :grid
+
   def initialize
     @grid = new_grid
   end
@@ -18,31 +20,33 @@ class Board
   end
 
   def show
-    checkered_board = @grid.map.with_index do |row, row_index|
+    checkered_grid = @grid.map.with_index do |row, row_index|
       if row_index.even?
         row.map.with_index do |_square, sqr_index|
           if sqr_index.even?
-            "\e[1m\u001b[90m\e[37m   \u001b[0m\e[0m"
+            black_square(" ")
           else
-            "\e[1m\u001b[44m\e[37m   \u001b[0m\e[0m"
+            blue_square(" ")
           end
         end
       else
         row.map.with_index do |_square, sqr_index|
           if sqr_index.odd?
-            "\e[1m\u001b[90m\e[37m   \u001b[0m\e[0m"
+            black_square(" ")
           else
-            "\e[1m\u001b[44m\e[37m   \u001b[0m\e[0m"
+            blue_square(" ")
           end
         end
       end
     end
-    wrapped_board = checkered_board.map do |row|
+    wrapped_grid = checkered_grid.map do |row|
       row[-1] += "\n"
       row
     end
-    puts wrapped_board.join
+    puts wrapped_grid.join
   end
+
+  def add_piece(piece, position) end
 
   private
 
@@ -55,5 +59,13 @@ class Board
       column = column.succ
     end
     row
+  end
+
+  def black_square(occupant)
+    "\u001b[90m\e[1m\e[37m #{occupant} \u001b[0m"
+  end
+
+  def blue_square(occupant)
+    "\u001b[44m\e[1m\e[37m #{occupant} \u001b[0m"
   end
 end

@@ -3,6 +3,6 @@
 class Square
   def initialize(position)
     @position = position
-    @occupant = nil
+    @occupant = " "
   end
 end
