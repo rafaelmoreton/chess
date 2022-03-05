@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'square'
+
 class Board
   def initialize
     @grid = new_grid
@@ -48,8 +50,8 @@ class Board
     row = []
     column = 'a'
     8.times do
-      position = letter.to_s + column
-      row << position
+      position = column + letter.to_s
+      row << Square.new(position)
       column = column.succ
     end
     row
