@@ -11,16 +11,6 @@ class Board
     @grid = new_grid
   end
 
-  def new_grid
-    grid = []
-    row_letter = 8
-    8.times do
-      grid << new_row(row_letter)
-      row_letter = row_letter.pred
-    end
-    grid
-  end
-
   def show
     checkered_grid = @grid.map.with_index do |row, row_index|
       if row_index.even?
@@ -58,15 +48,25 @@ class Board
 
   private
 
-  def new_row(letter)
-    row = []
-    column = 'a'
+  def new_grid
+    grid = []
+    row_number = 8
     8.times do
-      position = column + letter.to_s
-      row << Square.new(position)
-      column = column.succ
+      grid << new_row(row_number)
+      row_number = row_number.pred
     end
-    row
+    grid
+  end
+
+  def new_row(row_number)
+    column = []
+    column_letter = 'a'
+    8.times do
+      position = column_letter + row_number.to_s
+      column << Square.new(position)
+      column_letter = column_letter.succ
+    end
+    column
   end
 
   def black_square(occupant)
