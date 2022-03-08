@@ -4,6 +4,10 @@ require_relative 'square'
 require_relative 'piece'
 require_relative 'pawn'
 
+# Board objects are responsible for keeping track of an 8x8 grid of squares and
+# the pieces that occupy them. The addition of pieces to the board pertains
+# to the Board class because players seldom need to do it, since the initial
+# set up is always the same.
 class Board
   attr_reader :grid
 
@@ -44,6 +48,17 @@ class Board
         square.occupant = piece
       end
     end
+  end
+
+  def set_up_pieces
+    add_piece(Pawn.new('white'), 'a2')
+    add_piece(Pawn.new('white'), 'b2')
+    add_piece(Pawn.new('white'), 'c2')
+    add_piece(Pawn.new('white'), 'd2')
+    add_piece(Pawn.new('white'), 'e2')
+    add_piece(Pawn.new('white'), 'f2')
+    add_piece(Pawn.new('white'), 'g2')
+    add_piece(Pawn.new('white'), 'h2')
   end
 
   private
