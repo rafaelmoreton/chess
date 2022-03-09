@@ -23,10 +23,11 @@ class Game
   end
 
   def move_piece_to(target)
-    @board.grid.reduce(:+).each do |square|
-      if square.position == target
-        square.occupant = @selected_square.occupant
+    @board.grid.reduce(:+).each do |target_square|
+      if target_square.position == target
+        target_square.occupant = @selected_square.occupant
         @selected_square.occupant = nil
+        @selected_square = nil
       end
     end
   end
@@ -55,8 +56,45 @@ class Game
 
   def player_turn(player)
     puts "it is #{player.name}' turn"
-    select_square(gets.chomp)
-    move_piece_to(gets.chomp)
+    until @selected_square
+      select_input = gets.chomp
+      select_square(select_input) if selection_check?(player, select_input)
+    end
+    until @selected_square.nil?
+      move_input = gets.chomp
+      move_piece_to(move_input) if move_check?(move_input)
+    end
+  end
+
+  def selection_check?(player, input)
+    target_square = @board.grid.reduce(:+).find do |square|
+      square.position == input
+    end
+    if target_square.nil?
+      puts 'invalid input'
+      false
+    elsif target_square.occupant.nil? ||
+          target_square.occupant&.color != player.color
+      puts "there is no #{player.color} piece on this square"
+      false
+    else
+      true
+    end
+  end
+
+  def move_check?(input)
+    target_square = @board.grid.reduce(:+).find do |square|
+      square.position == input
+    end
+    if target_square.nil?
+      puts 'invalid target'
+      false
+    elsif target_square.occupant&.color == @selected_square.occupant.color
+      puts 'invalid move'
+      false
+    else
+      true
+    end
   end
 
   def turn
@@ -71,10 +109,6 @@ end
 
 test = Game.new
 test.instance_variable_get(:@board).set_up_pieces
-test.select_square('c2')
-test.instance_variable_get(:@board).show
-test.move_piece_to('c4')
-test.instance_variable_get(:@board).show
 test.new_players
 test.instance_variable_get(:@board).show
 test.turn
