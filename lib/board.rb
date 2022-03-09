@@ -59,6 +59,14 @@ class Board
     add_piece(Pawn.new('white'), 'f2')
     add_piece(Pawn.new('white'), 'g2')
     add_piece(Pawn.new('white'), 'h2')
+    add_piece(Pawn.new('black'), 'a7')
+    add_piece(Pawn.new('black'), 'b7')
+    add_piece(Pawn.new('black'), 'c7')
+    add_piece(Pawn.new('black'), 'd7')
+    add_piece(Pawn.new('black'), 'e7')
+    add_piece(Pawn.new('black'), 'f7')
+    add_piece(Pawn.new('black'), 'g7')
+    add_piece(Pawn.new('black'), 'h7')
   end
 
   private

@@ -26,6 +26,9 @@ class Game
     @board.grid.reduce(:+).each do |target_square|
       if target_square.position == target
         target_square.occupant = @selected_square.occupant
+        if target_square.occupant.is_a?(Pawn)
+          target_square.occupant.start_position = false
+        end
         @selected_square.occupant = nil
         @selected_square = nil
       end
@@ -89,7 +92,10 @@ class Game
     if target_square.nil?
       puts 'invalid target'
       false
-    elsif target_square.occupant&.color == @selected_square.occupant.color
+    elsif target_square.occupant&.color == @selected_square.occupant.color ||
+          @selected_square.occupant.valid_moves(@board).none? do |move|
+            target_square.position == move
+          end
       puts 'invalid move'
       false
     else
