@@ -34,12 +34,7 @@ class Game
   end
 
   def choose_name(player_color)
-    case player_color
-    when 'white'
-      puts 'choose a name for first player, white color'
-    when 'black'
-      puts 'choose a name for second player, black color'
-    end
+    puts "choose a name for #{player_color} color player"
     loop do
       player_input = gets.chomp
       return player_input unless player_input.empty?
@@ -67,15 +62,14 @@ class Game
     end
   end
 
+  # rubocop:disable Metrics/MethodLength
   def selection_check?(player, input)
-    target_square = @board.grid.reduce(:+).find do |square|
-      square.position == input
-    end
-    if target_square.nil?
+    selected_sqr = @board.find_square(input)
+    if selected_sqr.nil?
       puts 'invalid input'
       false
-    elsif target_square.occupant.nil? ||
-          target_square.occupant&.color != player.color
+    elsif selected_sqr.occupant.nil? ||
+          selected_sqr.occupant&.color != player.color
       puts "there is no #{player.color} piece on this square"
       false
     else
@@ -84,15 +78,13 @@ class Game
   end
 
   def move_check?(input)
-    target_square = @board.grid.reduce(:+).find do |square|
-      square.position == input
-    end
-    if target_square.nil?
+    target_sqr = @board.find_square(input)
+    if target_sqr.nil?
       puts 'invalid target'
       false
-    elsif target_square.occupant&.color == @selected_square.occupant.color ||
+    elsif target_sqr.occupant&.color == @selected_square.occupant.color ||
           @selected_square.occupant.valid_moves(@board).none? do |move|
-            target_square.position == move
+            target_sqr.position == move
           end
       puts 'invalid move'
       false
@@ -100,6 +92,7 @@ class Game
       true
     end
   end
+  # rubocop:enable Metrics/MethodLength
 
   def turn
     loop do
