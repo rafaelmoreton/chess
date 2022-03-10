@@ -15,25 +15,13 @@ class Board
     @grid = new_grid
   end
 
+  def find_square(square_position)
+    @grid.flatten.find { |square| square.position == square_position }
+  end
+
   def show
     checkered_grid = @grid.map.with_index do |row, row_index|
-      if row_index.even?
-        row.map.with_index do |square, sqr_index|
-          if sqr_index.even?
-            black_square(square.occupant)
-          else
-            blue_square(square.occupant)
-          end
-        end
-      else
-        row.map.with_index do |square, sqr_index|
-          if sqr_index.odd?
-            black_square(square.occupant)
-          else
-            blue_square(square.occupant)
-          end
-        end
-      end
+      checkered_row(row, row_index)
     end
     wrapped_grid = checkered_grid.map do |row|
       row[-1] += "\n"
@@ -43,30 +31,15 @@ class Board
   end
 
   def add_piece(piece, position)
-    grid.reduce(:+).each do |square|
-      if square.position == position
-        square.occupant = piece
-      end
-    end
+    square = find_square(position)
+    square.occupant = piece
   end
 
   def set_up_pieces
-    add_piece(Pawn.new('white'), 'a2')
-    add_piece(Pawn.new('white'), 'b2')
-    add_piece(Pawn.new('white'), 'c2')
-    add_piece(Pawn.new('white'), 'd2')
-    add_piece(Pawn.new('white'), 'e2')
-    add_piece(Pawn.new('white'), 'f2')
-    add_piece(Pawn.new('white'), 'g2')
-    add_piece(Pawn.new('white'), 'h2')
-    add_piece(Pawn.new('black'), 'a7')
-    add_piece(Pawn.new('black'), 'b7')
-    add_piece(Pawn.new('black'), 'c7')
-    add_piece(Pawn.new('black'), 'd7')
-    add_piece(Pawn.new('black'), 'e7')
-    add_piece(Pawn.new('black'), 'f7')
-    add_piece(Pawn.new('black'), 'g7')
-    add_piece(Pawn.new('black'), 'h7')
+    row2 = %w[a2 b2 c2 d2 e2 f2 g2 h2]
+    row2.each { |position| add_piece(Pawn.new('white'), position) }
+    row7 = %w[a7 b7 c7 d7 e7 f7 g7 h7]
+    row7.each { |position| add_piece(Pawn.new('black'), position) }
   end
 
   private
@@ -92,11 +65,24 @@ class Board
     column
   end
 
+  def checkered_row(row, row_index)
+    row.map.with_index do |square, sqr_index|
+      if (row_index.even? && sqr_index.even?) ||
+         (row_index.odd? && sqr_index.odd?)
+        black_square(square.occupant)
+      else
+        blue_square(square.occupant)
+      end
+    end
+  end
+
   def black_square(occupant)
-    "\u001b[90m\e[1m\e[37m #{occupant.is_a?(Piece) ? occupant.symbol : " "} \u001b[0m"
+    shown_occupant = occupant.nil? ? ' ' : occupant.symbol
+    "\u001b[90m\e[1m\e[37m #{shown_occupant} \u001b[0m"
   end
 
   def blue_square(occupant)
-    "\u001b[44m\e[1m\e[37m #{occupant.is_a?(Piece) ? occupant.symbol : " "} \u001b[0m"
+    shown_occupant = occupant.nil? ? ' ' : occupant.symbol
+    "\u001b[44m\e[1m\e[37m #{shown_occupant} \u001b[0m"
   end
 end
