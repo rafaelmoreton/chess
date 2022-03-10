@@ -16,22 +16,20 @@ class Game
 
   def select_square(position)
     @board.grid.reduce(:+).each do |square|
-      if square.position == position
-        @selected_square = square
-      end
+      @selected_square = square if square.position == position
     end
   end
 
   def move_piece_to(target)
     @board.grid.reduce(:+).each do |target_square|
-      if target_square.position == target
-        target_square.occupant = @selected_square.occupant
-        if target_square.occupant.is_a?(Pawn)
-          target_square.occupant.start_position = false
-        end
-        @selected_square.occupant = nil
-        @selected_square = nil
+      next unless target_square.position == target
+
+      target_square.occupant = @selected_square.occupant
+      if target_square.occupant.is_a?(Pawn)
+        target_square.occupant.start_position = false
       end
+      @selected_square.occupant = nil
+      @selected_square = nil
     end
   end
 
@@ -112,9 +110,3 @@ class Game
     end
   end
 end
-
-test = Game.new
-test.instance_variable_get(:@board).set_up_pieces
-test.new_players
-test.instance_variable_get(:@board).show
-test.turn
