@@ -25,7 +25,7 @@ class Game
       next unless target_square.position == target
 
       target_square.occupant = @selected_square.occupant
-      if target_square.occupant.is_a?(Pawn)
+      if target_square.occupant.is_a?(WPawn)
         target_square.occupant.start_position = false
       end
       @selected_square.occupant = nil
@@ -103,10 +103,3 @@ class Game
     end
   end
 end
-
-# test = Game.new
-# board = test.instance_variable_get(:@board)
-# board.set_up_pieces
-# pawn = board.find_square('a2').occupant
-# p pawn.find_square(board)
-# board.show

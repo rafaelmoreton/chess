@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require_relative '../lib/pawn'
+require_relative '../lib/pieces/w_pawn'
 
-describe Pawn do
-  subject(:white_pawn) { described_class.new('white') }
+describe WPawn do
+  subject(:white_pawn) { described_class.new }
   let(:a3) { double('square', position: 'a3', occupant: nil) }
   let(:b3) { double('square', position: 'b3', occupant: nil) }
   let(:c3) { double('square', position: 'c3', occupant: nil) }

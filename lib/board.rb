@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 require_relative 'square'
-require_relative 'piece'
-require_relative 'pawn'
+require_relative './pieces/piece'
+require_relative './pieces/w_pawn'
+require_relative './pieces/b_pawn'
 
 # Board objects are responsible for keeping track of an 8x8 grid of squares and
 # the pieces that occupy them. The addition of pieces to the board pertains
@@ -37,9 +38,9 @@ class Board
 
   def set_up_pieces
     row2 = %w[a2 b2 c2 d2 e2 f2 g2 h2]
-    row2.each { |position| add_piece(Pawn.new('white'), position) }
+    row2.each { |position| add_piece(WPawn.new, position) }
     row7 = %w[a7 b7 c7 d7 e7 f7 g7 h7]
-    row7.each { |position| add_piece(Pawn.new('black'), position) }
+    row7.each { |position| add_piece(BPawn.new, position) }
   end
 
   private

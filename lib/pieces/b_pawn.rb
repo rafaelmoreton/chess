@@ -1,14 +1,15 @@
 # frozen_string_literal: true
 
-require_relative 'piece'
+require_relative 'black'
 
-class Pawn < Piece
-  attr_reader :symbol
+# Specify rules to find black pawn valid movements
+class BPawn < Black
   attr_accessor :start_position
 
-  def initialize(color)
+  def initialize
     super
-    @symbol = color == 'black' ? "\u2659" : "\u265f"
+    @color = 'black'
+    @symbol = "\u2659"
     @start_position = true
   end
 
@@ -21,15 +22,15 @@ class Pawn < Piece
 
   def valid_ahead(board)
     coord = find_coordinates(board)
-    ahead = coord[:column] + coord[:row].succ
+    ahead = coord[:column] + coord[:row].ord.pred.chr
     square_ahead = board.find_square(ahead)
     square_ahead.occupant.nil? ? [ahead] : []
   end
 
   def valid_start_jump(board)
     coord = find_coordinates(board)
-    ahead = coord[:column] + coord[:row].succ
-    jump = coord[:column] + coord[:row].succ.succ
+    ahead = coord[:column] + coord[:row].ord.pred.chr
+    jump = coord[:column] + coord[:row].ord.pred.pred.chr
     square_ahead = board.find_square(ahead)
     square_jump = board.find_square(jump)
     if square_ahead.occupant.nil? && square_jump.occupant.nil? &&
@@ -44,14 +45,14 @@ class Pawn < Piece
     coord = find_coordinates(board)
     case side
     when 'left'
-      diagonal = coord[:column].ord.pred.chr + coord[:row].succ
+      diagonal = coord[:column].ord.pred.chr + coord[:row].ord.pred.chr
     when 'right'
-      diagonal = coord[:column].ord.succ.chr + coord[:row].succ
+      diagonal = coord[:column].ord.succ.chr + coord[:row].ord.pred.chr
     end
     diagonal_occupant = board.find_square(diagonal).occupant
     valid = []
     if diagonal_occupant &&
-       diagonal_occupant.color == 'black'
+       diagonal_occupant.color == 'white'
       valid << diagonal
     end
     valid

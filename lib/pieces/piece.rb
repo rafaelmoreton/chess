@@ -3,11 +3,9 @@
 # Parent of every kind of piece's class (Pawn, King, etc.). It is used to store
 # common attributes and methods.
 class Piece
-  attr_reader :color
+  attr_reader :color, :symbol
 
-  def initialize(color)
-    @color = color
-  end
+  def initialize; end
 
   def find_coordinates(board)
     piece_square = board.grid.reduce(:+).find do |square|
