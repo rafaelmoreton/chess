@@ -2,7 +2,6 @@
 
 require_relative '../lib/game'
 
-# rubocop:disable Metrics/BlockLength
 describe Game do
   subject(:game) { described_class.new }
   let(:board) { game.instance_variable_get(:@board) }
@@ -138,4 +137,3 @@ describe Game do
     end
   end
 end
-# rubocop:enable Metrics/BlockLength

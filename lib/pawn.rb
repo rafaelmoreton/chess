@@ -13,79 +13,47 @@ class Pawn < Piece
   end
 
   def valid_moves(board)
-    piece_square = board.grid.reduce(:+).find do |square|
-      square.occupant == self
+    valid_ahead(board) +
+      valid_start_jump(board) +
+      valid_diagonal(board, 'left') +
+      valid_diagonal(board, 'right')
+  end
+
+  def valid_ahead(board)
+    coord = find_coordinates(board)
+    ahead = coord[:column] + coord[:row].succ
+    square_ahead = board.find_square(ahead)
+    square_ahead.occupant.nil? ? [ahead] : []
+  end
+
+  def valid_start_jump(board)
+    coord = find_coordinates(board)
+    ahead = coord[:column] + coord[:row].succ
+    jump = coord[:column] + coord[:row].succ.succ
+    square_ahead = board.find_square(ahead)
+    square_jump = board.find_square(jump)
+    if square_ahead.occupant.nil? && square_jump.occupant.nil? &&
+       @start_position == true
+      [jump]
+    else
+      []
     end
-    piece_column = piece_square.position.split('').first
-    piece_row = piece_square.position.split('').last
-    valid_moves = []
+  end
 
-    case @color
-    when 'white'
-      position_one_above = piece_column + piece_row.succ
-      square_one_above = board.grid.reduce(:+).find do |square|
-        square.position == position_one_above
-      end
-      if square_one_above.occupant.nil?
-        valid_moves << position_one_above
-      end
-
-      if @start_position == true &&
-         square_one_above.occupant.nil?
-        position_two_above = piece_column + piece_row.succ.succ
-        valid_moves << position_two_above
-      end
-
-      position_diagonal_above_r = piece_column.ord.succ.chr + piece_row.succ
-      position_diagonal_above_l = piece_column.ord.pred.chr + piece_row.succ
-      position_diagonals_above = [
-        position_diagonal_above_r,
-        position_diagonal_above_l
-      ]
-      position_diagonals_above.each do |diagonal|
-        diagonal_square = board.grid.reduce(:+).find do |square|
-          square.position == diagonal
-        end
-        if diagonal_square.occupant &&
-           diagonal_square.color == 'black'
-          valid_moves << diagonal
-        end
-      end
-
-    when 'black'
-      position_one_below = piece_column + piece_row.to_i.pred.to_s
-      square_one_below = board.grid.reduce(:+).find do |square|
-        square.position == position_one_below
-      end
-      if square_one_below.occupant.nil?
-        valid_moves << position_one_below
-      end
-
-      if @start_position == true &&
-         square_one_below.occupant.nil?
-        position_two_below = piece_column + piece_row.to_i.pred.pred.to_s
-        valid_moves << position_two_below
-      end
+  def valid_diagonal(board, side)
+    coord = find_coordinates(board)
+    case side
+    when 'left'
+      diagonal = coord[:column].ord.pred.chr + coord[:row].succ
+    when 'right'
+      diagonal = coord[:column].ord.succ.chr + coord[:row].succ
     end
-
-    position_diagonal_below_r = piece_column.ord.succ.chr +
-                                piece_row.to_i.pred.to_s
-    position_diagonal_below_l = piece_column.ord.pred.chr +
-                                piece_row.to_i.pred.to_s
-    position_diagonals_below = [
-      position_diagonal_below_r,
-      position_diagonal_below_l
-    ]
-    position_diagonals_below.each do |diagonal|
-      diagonal_square = board.grid.reduce(:+).find do |square|
-        square.position == diagonal
-      end
-      if diagonal_square.occupant &&
-         diagonal_square.color == 'white'
-        valid_moves << diagonal
-      end
+    diagonal_occupant = board.find_square(diagonal).occupant
+    valid = []
+    if diagonal_occupant &&
+       diagonal_occupant.color == 'black'
+      valid << diagonal
     end
-
-    valid_moves
+    valid
   end
 end

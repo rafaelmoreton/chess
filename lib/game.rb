@@ -103,3 +103,10 @@ class Game
     end
   end
 end
+
+# test = Game.new
+# board = test.instance_variable_get(:@board)
+# board.set_up_pieces
+# pawn = board.find_square('a2').occupant
+# p pawn.find_square(board)
+# board.show
