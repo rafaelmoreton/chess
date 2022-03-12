@@ -4,6 +4,7 @@ require_relative 'square'
 require_relative './pieces/piece'
 require_relative './pieces/w_pawn'
 require_relative './pieces/b_pawn'
+require_relative './pieces/tower'
 
 # Board objects are responsible for keeping track of an 8x8 grid of squares and
 # the pieces that occupy them. The addition of pieces to the board pertains
@@ -41,6 +42,8 @@ class Board
     row2.each { |position| add_piece(WPawn.new('white'), position) }
     row7 = %w[a7 b7 c7 d7 e7 f7 g7 h7]
     row7.each { |position| add_piece(BPawn.new('black'), position) }
+    %w[a1 h1].each { |position| add_piece(Tower.new('white'), position) }
+    %w[a8 h8].each { |position| add_piece(Tower.new('black'), position) }
   end
 
   private
