@@ -5,7 +5,9 @@
 class Piece
   attr_reader :color, :symbol
 
-  def initialize; end
+  def initialize(color)
+    @color = color
+  end
 
   def find_coordinates(board)
     piece_square = board.grid.reduce(:+).find do |square|

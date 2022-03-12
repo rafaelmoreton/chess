@@ -3,7 +3,7 @@
 require_relative '../lib/pieces/piece'
 
 describe Piece do
-  subject(:piece) { described_class.new }
+  subject(:piece) { described_class.new('white') }
   let(:a3) { double('square', position: 'a3', occupant: nil) }
   let(:b3) { double('square', position: 'b3', occupant: nil) }
   let(:c3) { double('square', position: 'c3', occupant: nil) }

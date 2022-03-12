@@ -1,14 +1,13 @@
 # frozen_string_literal: true
 
-require_relative 'white'
+require_relative 'pawn'
 
 # Specify rules to find white pawn valid movements
-class WPawn < White
+class WPawn < Pawn
   attr_accessor :start_position
 
-  def initialize
+  def initialize(color)
     super
-    @color = 'white'
     @symbol = "\u265f"
     @start_position = true
   end

@@ -38,9 +38,9 @@ class Board
 
   def set_up_pieces
     row2 = %w[a2 b2 c2 d2 e2 f2 g2 h2]
-    row2.each { |position| add_piece(WPawn.new, position) }
+    row2.each { |position| add_piece(WPawn.new('white'), position) }
     row7 = %w[a7 b7 c7 d7 e7 f7 g7 h7]
-    row7.each { |position| add_piece(BPawn.new, position) }
+    row7.each { |position| add_piece(BPawn.new('black'), position) }
   end
 
   private

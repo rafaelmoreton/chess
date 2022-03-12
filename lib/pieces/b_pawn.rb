@@ -1,14 +1,13 @@
 # frozen_string_literal: true
 
-require_relative 'black'
+require_relative 'pawn'
 
 # Specify rules to find black pawn valid movements
-class BPawn < Black
+class BPawn < Pawn
   attr_accessor :start_position
 
-  def initialize
+  def initialize(color)
     super
-    @color = 'black'
     @symbol = "\u2659"
     @start_position = true
   end
