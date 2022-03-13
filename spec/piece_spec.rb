@@ -139,5 +139,37 @@ describe Piece do
         expect(result).to match_array(down_r_coordinates)
       end
     end
+
+    context 'there is a same color piece on the line' do
+      let(:same_color_piece) { described_class.new('white') }
+      it "returns an array containing the all valid coordinates up to that
+      piece's, not including it" do
+        allow(c4).to receive(:occupant).and_return(piece)
+        allow(c7).to receive(:occupant).and_return(same_color_piece)
+        allow(board).to receive(:find_square).and_return(c5, c6, c7, nil)
+        up_coordinates = %w[c5 c6]
+        up_dir = [0, 1]
+
+        result = piece.find_direction_coordinates(up_dir, board)
+
+        expect(result).to match_array(up_coordinates)
+      end
+    end
+
+    context 'there is an opposite color piece on the line' do
+      let(:opposite_color_piece) { described_class.new('black') }
+      it "returns an array containing the all valid coordinates up to that
+      piece's, including it" do
+        allow(c4).to receive(:occupant).and_return(piece)
+        allow(c7).to receive(:occupant).and_return(opposite_color_piece)
+        allow(board).to receive(:find_square).and_return(c5, c6, c7, nil)
+        up_coordinates = %w[c5 c6 c7]
+        up_dir = [0, 1]
+
+        result = piece.find_direction_coordinates(up_dir, board)
+
+        expect(result).to match_array(up_coordinates)
+      end
+    end
   end
 end
