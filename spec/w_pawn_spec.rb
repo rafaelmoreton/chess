@@ -115,6 +115,18 @@ describe WPawn do
   end
 
   describe '#valid_diagonal' do
+    context 'when direction is left and pawn is at left edge of board' do
+      before do
+        allow(a1).to receive(:occupant).and_return(white_pawn)
+        allow(small_board).to receive(:find_square)
+      end
+      it 'returns an empty array' do
+        result = white_pawn.valid_diagonal(small_board, 'left')
+
+        expect(result).to eq []
+      end
+    end
+
     context 'when there is no piece at the diagonal' do
       before do
         allow(b1).to receive(:occupant).and_return(white_pawn)

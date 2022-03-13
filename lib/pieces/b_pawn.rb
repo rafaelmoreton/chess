@@ -48,7 +48,7 @@ class BPawn < Pawn
     when 'right'
       diagonal = coord[:column].ord.succ.chr + coord[:row].ord.pred.chr
     end
-    diagonal_occupant = board.find_square(diagonal).occupant
+    diagonal_occupant = board.find_square(diagonal)&.occupant
     valid = []
     if diagonal_occupant &&
        diagonal_occupant.color == 'white'
