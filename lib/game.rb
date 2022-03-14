@@ -58,7 +58,7 @@ class Game
     end
     until @selected_square.nil?
       move_input = gets.chomp
-      move_piece_to(move_input) if move_check?(move_input)
+      move_piece_to(move_input) if move_check?(player, move_input)
     end
   end
 
@@ -77,9 +77,16 @@ class Game
     end
   end
 
-  def move_check?(input)
+  def move_check?(player, input)
     target_sqr = @board.find_square(input)
-    if target_sqr.nil?
+    if input == '' # when input is empty select another square
+      puts 'deselected square, select another'
+      @selected_square = nil
+      until @selected_square
+        input = gets.chomp
+        select_square(input) if selection_check?(player, input)
+      end
+    elsif target_sqr.nil?
       puts 'invalid target'
       false
     elsif target_sqr.occupant&.color == @selected_square.occupant.color ||

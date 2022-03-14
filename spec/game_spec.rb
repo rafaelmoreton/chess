@@ -87,6 +87,7 @@ describe Game do
 
   describe '#move_check?' do
     position_to_select = 'c2'
+    let(:player) { double('player') }
     let(:selected_sqr) do
       squares.find { |sqr| sqr.position == position_to_select }
     end
@@ -103,7 +104,7 @@ describe Game do
         warn = 'invalid target'
         expect(game).to receive(:puts).with(warn).once
         invalid_input = 'check'
-        result = game.move_check?(invalid_input)
+        result = game.move_check?(player, invalid_input)
         expect(result).to be false
       end
     end
@@ -112,7 +113,7 @@ describe Game do
     piece" do
       it 'returns true' do
         valid_move = 'c3'
-        result = game.move_check?(valid_move)
+        result = game.move_check?(player, valid_move)
         expect(result).to be true
       end
     end
@@ -120,7 +121,7 @@ describe Game do
     context 'when player input is another valid move for that piece' do
       it 'returns true' do
         valid_move = 'd5'
-        result = game.move_check?(valid_move)
+        result = game.move_check?(player, valid_move)
         expect(result).to be true
       end
     end
@@ -131,7 +132,7 @@ describe Game do
         warn = 'invalid move'
         invalid_move = 'f1'
         expect(game).to receive(:puts).with(warn).once
-        result = game.move_check?(invalid_move)
+        result = game.move_check?(player, invalid_move)
         expect(result).to be false
       end
     end
