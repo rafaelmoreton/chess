@@ -29,11 +29,18 @@ class Board
     checkered_grid = @grid.map.with_index do |row, row_index|
       checkered_row(row, row_index)
     end
+    reverse_index = 8
     wrapped_grid = checkered_grid.map do |row|
-      row[-1] += "\n"
+
+      row.push(" #{reverse_index}\n")
+      row.unshift("#{reverse_index} ")
+      reverse_index -= 1
       row
     end
-    puts wrapped_grid.join
+    columns_index = ['   a  b  c  d  e  f  g  h']
+    indexed_grid = columns_index + ["\n"] + wrapped_grid + columns_index
+
+    puts indexed_grid.join
   end
 
   def add_piece(piece, position)
@@ -71,14 +78,14 @@ class Board
   end
 
   def new_row(row_number)
-    column = []
+    row = []
     column_letter = 'a'
     8.times do
       position = column_letter + row_number.to_s
-      column << Square.new(position)
+      row << Square.new(position)
       column_letter = column_letter.succ
     end
-    column
+    row
   end
 
   def checkered_row(row, row_index)

@@ -39,14 +39,16 @@ describe Board do
     end
     it 'outputs the board grid' do
       board_grid = <<~LITERAL_GRID
-        blackblueblackblueblackblueblackblue
-        blueblackblueblackblueblackblueblack
-        blackblueblackblueblackblueblackblue
-        blueblackblueblackblueblackblueblack
-        blackblueblackblueblackblueblackblue
-        blueblackblueblackblueblackblueblack
-        blackblueblackblueblackblueblackblue
-        blueblackblueblackblueblackblueblack
+           a  b  c  d  e  f  g  h
+        8 blackblueblackblueblackblueblackblue 8
+        7 blueblackblueblackblueblackblueblack 7
+        6 blackblueblackblueblackblueblackblue 6
+        5 blueblackblueblackblueblackblueblack 5
+        4 blackblueblackblueblackblueblackblue 4
+        3 blueblackblueblackblueblackblueblack 3
+        2 blackblueblackblueblackblueblackblue 2
+        1 blueblackblueblackblueblackblueblack 1
+           a  b  c  d  e  f  g  h
       LITERAL_GRID
       expect { board.show }.to output(board_grid).to_stdout
     end
