@@ -25,10 +25,11 @@ class Game
       next unless target_square.position == target
 
       target_square.occupant = @selected_square.occupant
-      if target_square.occupant.is_a?(WPawn)
-        target_square.occupant.start_position = false
-      end
       @selected_square.occupant = nil
+      if target_square.occupant.is_a?(Pawn)
+        target_square.occupant.start_position = false
+        target_square.occupant.promotion(@board)
+      end
       @selected_square = nil
     end
   end
