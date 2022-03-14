@@ -20,40 +20,46 @@ class BPawn < Pawn
   end
 
   def valid_ahead(board)
-    coord = find_coordinates(board)
-    ahead = coord[:column] + coord[:row].ord.pred.chr
-    square_ahead = board.find_square(ahead)
-    square_ahead.occupant.nil? ? [ahead] : []
+    self_coord = find_coordinates(board)
+    ahead_position = shift_coordinates(self_coord, 0, -1)&.values&.join
+    if ahead_position && board.find_square(ahead_position).occupant.nil?
+      [ahead_position]
+    else
+      []
+    end
   end
 
   def valid_start_jump(board)
-    coord = find_coordinates(board)
-    ahead = coord[:column] + coord[:row].ord.pred.chr
-    jump = coord[:column] + coord[:row].ord.pred.pred.chr
-    square_ahead = board.find_square(ahead)
-    square_jump = board.find_square(jump)
-    if square_ahead.occupant.nil? && square_jump.occupant.nil? &&
-       @start_position == true
-      [jump]
+    self_coord = find_coordinates(board)
+    ahead_position = shift_coordinates(self_coord, 0, -1)&.values&.join
+    jump_position = shift_coordinates(self_coord, 0, -2)&.values&.join
+    ahead_square = board.find_square(ahead_position)
+    jump_square = board.find_square(jump_position)
+    if @start_position == true && jump_square &&
+       ahead_square.occupant.nil? && jump_square.occupant.nil?
+      [jump_position]
     else
       []
     end
   end
 
   def valid_diagonal(board, side)
-    coord = find_coordinates(board)
+    self_coord = find_coordinates(board)
     case side
     when 'left'
-      diagonal = coord[:column].ord.pred.chr + coord[:row].ord.pred.chr
+      diagonal = shift_coordinates(self_coord, -1, -1)
     when 'right'
-      diagonal = coord[:column].ord.succ.chr + coord[:row].ord.pred.chr
+      diagonal = shift_coordinates(self_coord, 1, -1)
     end
-    diagonal_occupant = board.find_square(diagonal)&.occupant
-    valid = []
+    return [] if diagonal.nil?
+
+    diagonal_position = diagonal.values.join
+    diagonal_occupant = board.find_square(diagonal_position).occupant
     if diagonal_occupant &&
        diagonal_occupant.color == 'white'
-      valid << diagonal
+      [diagonal_position]
+    else
+      []
     end
-    valid
   end
 end
