@@ -137,4 +137,40 @@ describe Game do
       end
     end
   end
+
+  describe '#check?' do
+    let(:king) { King.new('white') }
+    before { board.add_piece(king, 'c5') }
+    context 'when the king is safe' do
+      it 'returns false' do
+        result = game.check?('white')
+
+        expect(result).to be false
+      end
+    end
+
+    context 'when the king is threatened' do
+      context 'by one piece' do
+        it 'returns true' do
+          board.add_piece(Queen.new('black'), 'c3')
+
+          result = game.check?('white')
+
+          expect(result).to be true
+        end
+      end
+
+      context 'by several pieces' do
+        it 'returns true' do
+          board.add_piece(Queen.new('black'), 'c3')
+          board.add_piece(Knight.new('black'), 'd3')
+          board.add_piece(Tower.new('black'), 'h5')
+
+          result = game.check?('white')
+
+          expect(result).to be true
+        end
+      end
+    end
+  end
 end

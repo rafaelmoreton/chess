@@ -106,8 +106,23 @@ class Game
     loop do
       player_turn(@white)
       @board.show
+      puts "black king is in check" if check?('black')
       player_turn(@black)
       @board.show
+      puts "white king is in check" if check?('white')
     end
+  end
+
+  def check?(color)
+    king_position = nil
+    threat_moves = []
+    @board.grid.flatten.each do |square|
+      if square.occupant && square.occupant.color != color
+        threat_moves << square.occupant&.valid_moves(@board)
+      elsif square.occupant.is_a?(King) && square.occupant.color == color
+        king_position = square.position
+      end
+    end
+    threat_moves.flatten.uniq.any?(king_position)
   end
 end
