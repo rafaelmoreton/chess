@@ -148,17 +148,23 @@ class Game
 
   def check_avoidable_by?(piece, color)
     original_position = piece.find_coordinates(@board).values.join
+    original_square = @board.find_square(original_position)
+
     piece.valid_moves(@board).each do |move_position|
-      @selected_square = @board.find_square(original_position)
-      move_piece_to(move_position)
+      move_square = @board.find_square(move_position)
+      move_occupant = move_square.occupant
+
+      move_square.occupant = piece
+      original_square.occupant = nil
+
       unless check?(color)
-        @selected_square = @board.find_square(move_position)
-        move_piece_to(original_position)
+        original_square.occupant = piece
+        move_square.occupant = move_occupant
         return true
       end
 
-      @selected_square = @board.find_square(move_position)
-      move_piece_to(original_position)
+      original_square.occupant = piece
+      move_square.occupant = move_occupant
     end
     false
   end

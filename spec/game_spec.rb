@@ -311,6 +311,23 @@ describe Game do
         end
       end
     end
+
+    context 'when the method moves the piece to test if it can end the check' do
+      let(:king) { King.new('white') }
+      let(:allied_tower) { Tower.new('white') }
+      let(:enemy_tower) { Tower.new('black') }
+      before do
+        board.add_piece(king, 'c5')
+        board.add_piece(allied_tower, 'h1')
+        board.add_piece(enemy_tower, 'c1')
+      end
+      it "the squares the piece moved into keep it's original occupant after that" do
+        c1 = board.find_square('c1')
+
+        expect { game.check_avoidable_by?(allied_tower, 'white') }
+          .not_to(change { c1.occupant })
+      end
+    end
   end
 
   describe '#exposing_move?' do
