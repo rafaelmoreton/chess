@@ -96,6 +96,9 @@ class Game
           end
       puts 'invalid move'
       false
+    elsif exposing_move?(player, target_sqr)
+      puts "You cannot let your king in check"
+      false
     else
       true
     end
@@ -106,10 +109,18 @@ class Game
     loop do
       player_turn(@white)
       @board.show
-      puts "black king is in check" if check?('black')
+      if check?('black')
+        return puts "checkmate, white player win" if checkmate?('black')
+
+        puts "black king is in check" 
+      end
       player_turn(@black)
       @board.show
-      puts "white king is in check" if check?('white')
+      if check?('white')
+        return puts "checkmate, black player win" if checkmate?('white')
+
+        puts "white king is in check" 
+      end
     end
   end
 
@@ -124,5 +135,40 @@ class Game
       end
     end
     threat_moves.flatten.uniq.any?(king_position)
+  end
+
+  def checkmate?(color)
+    @board.grid.flatten.each do |square|
+      if square.occupant&.color == color
+        return false if check_avoidable_by?(square.occupant, color)
+      end
+    end
+    true
+  end
+
+  def check_avoidable_by?(piece, color)
+    original_position = piece.find_coordinates(@board).values.join
+    piece.valid_moves(@board).each do |move_position|
+      @selected_square = @board.find_square(original_position)
+      move_piece_to(move_position)
+      unless check?(color)
+        @selected_square = @board.find_square(move_position)
+        move_piece_to(original_position)
+        return true
+      end
+
+      @selected_square = @board.find_square(move_position)
+      move_piece_to(original_position)
+    end
+    false
+  end
+
+  def exposing_move?(player, move_square)
+    move_square.occupant = @selected_square.occupant
+    @selected_square.occupant = nil
+    result = check?(player.color)
+    @selected_square.occupant = move_square.occupant
+    move_square.occupant = nil
+    result
   end
 end

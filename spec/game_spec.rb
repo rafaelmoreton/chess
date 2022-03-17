@@ -87,7 +87,7 @@ describe Game do
 
   describe '#move_check?' do
     position_to_select = 'c2'
-    let(:player) { double('player') }
+    let(:player) { double('player', color: 'white') }
     let(:selected_sqr) do
       squares.find { |sqr| sqr.position == position_to_select }
     end
@@ -170,6 +170,181 @@ describe Game do
 
           expect(result).to be true
         end
+      end
+    end
+  end
+
+  describe '#checkmate?' do
+    let(:king) { King.new('white') }
+    context 'when the king is in check, but can move out of it' do
+      it 'returns false' do
+        board.add_piece(king, 'c5')
+        board.add_piece(Tower.new('black'), 'c2')
+
+        result = game.checkmate?('white')
+
+        expect(result).to be false
+      end
+    end
+
+    context 'when the king is in check, and cannot move out of it' do
+      it 'returns true' do
+        board.add_piece(king, 'c5')
+        board.add_piece(Tower.new('black'), 'b8')
+        board.add_piece(Tower.new('black'), 'c2')
+        board.add_piece(Tower.new('black'), 'd7')
+
+        result = game.checkmate?('white')
+
+        expect(result).to be true
+      end
+    end
+
+    context 'when the king is in check but can be protected by another piece' do
+      it 'returns false' do
+        board.add_piece(king, 'c5')
+        board.add_piece(Tower.new('white'), 'b4')
+        board.add_piece(Tower.new('black'), 'c2')
+
+        result = game.checkmate?('white')
+
+        expect(result).to be false
+      end
+    end
+  end
+
+  describe '#check_avoidable_by?' do
+    context 'when the piece has some move that ends check, avoiding a checkmate' do
+      context 'when king can move out of threatened squares' do
+        let(:king) { King.new('white') }
+        let(:enemy_tower) { Tower.new('black') }
+        before do
+          board.add_piece(king, 'c5')
+          board.add_piece(enemy_tower, 'c2')
+        end
+        it 'returns true' do
+          result = game.check_avoidable_by?(king, 'white')
+
+          expect(result).to be true
+        end
+      end
+
+      context 'when king can capture the threatening piece' do
+        let(:king) { King.new('white') }
+        let(:enemy_tower) { Tower.new('black') }
+        before do
+          board.add_piece(king, 'c5')
+          board.add_piece(enemy_tower, 'c4')
+        end
+        it 'returns true' do
+          result = game.check_avoidable_by?(king, 'white')
+
+          expect(result).to be true
+        end
+      end
+
+      context 'when an allied piece can block the threatening piece(s)' do
+        let(:king) { King.new('white') }
+        let(:allied_tower) { Tower.new('white') }
+        let(:enemy_tower) { Tower.new('black') }
+        before do
+          board.add_piece(king, 'c5')
+          board.add_piece(allied_tower, 'a3')
+          board.add_piece(enemy_tower, 'c1')
+        end
+        it 'returns true' do
+          result = game.check_avoidable_by?(allied_tower, 'white')
+
+          expect(result).to be true
+        end
+      end
+
+      context 'when an allied piece can capture the threatening piece' do
+        let(:king) { King.new('white') }
+        let(:allied_tower) { Tower.new('white') }
+        let(:enemy_tower) { Tower.new('black') }
+        before do
+          board.add_piece(king, 'c5')
+          board.add_piece(allied_tower, 'a1')
+          board.add_piece(enemy_tower, 'c1')
+        end
+        it 'returns true' do
+          result = game.check_avoidable_by?(allied_tower, 'white')
+
+          expect(result).to be true
+        end
+      end
+    end
+
+    context 'when the piece has no move that ends check' do
+      context 'when king cannot move out of threatened squares' do
+        let(:king) { King.new('white') }
+        let(:enemy_tower1) { Tower.new('black') }
+        let(:enemy_tower2) { Tower.new('black') }
+        let(:enemy_tower3) { Tower.new('black') }
+        before do
+          board.add_piece(king, 'c5')
+          board.add_piece(enemy_tower1, 'b2')
+          board.add_piece(enemy_tower2, 'c2')
+          board.add_piece(enemy_tower3, 'd2')
+        end
+        it 'returns false' do
+          result = game.check_avoidable_by?(king, 'white')
+
+          expect(result).to be false
+        end
+      end
+
+      context 'when an allied piece cannot protect the king' do
+        let(:king) { King.new('white') }
+        let(:allied_tower) { Tower.new('white') }
+        let(:enemy_tower) { Tower.new('black') }
+        before do
+          board.add_piece(king, 'c5')
+          board.add_piece(allied_tower, 'a8')
+          board.add_piece(enemy_tower, 'c1')
+        end
+        it 'returns false' do
+          result = game.check_avoidable_by?(allied_tower, 'white')
+
+          expect(result).to be false
+        end
+      end
+    end
+  end
+
+  describe '#exposing_move?' do
+    let(:king_w) { King.new('white') }
+    let(:tower_w) { Tower.new('white') }
+    let(:tower_b) { Tower.new('black') }
+    let(:player_w) { double('player', color: 'white') } 
+    context 'when the tower move will not expose the king to a check' do
+      it 'returns false' do
+        board.add_piece(king_w, 'a1')
+        board.add_piece(tower_w, 'c1')
+        board.add_piece(tower_b, 'h1')
+        game.select_square('c1')
+        move = 'e1'
+        move_square = board.find_square(move)
+
+        result = game.exposing_move?(player_w, move_square)
+
+        expect(result).to be false
+      end
+    end
+
+    context 'when the tower move will expose the king to a check' do
+      it 'returns true' do
+        board.add_piece(king_w, 'a1')
+        board.add_piece(tower_w, 'c1')
+        board.add_piece(tower_b, 'h1')
+        game.select_square('c1')
+        move = 'c8'
+        move_square = board.find_square(move)
+
+        result = game.exposing_move?(player_w, move_square)
+
+        expect(result).to be true
       end
     end
   end
