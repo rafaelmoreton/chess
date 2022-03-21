@@ -31,7 +31,7 @@ class Knight < Piece
     ]
     all_coords.delete(nil)
     all_coords.map do |coord|
-      coord.values.join
+      coord.join
     end
   end
 end

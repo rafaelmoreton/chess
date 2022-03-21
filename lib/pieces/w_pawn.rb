@@ -21,7 +21,7 @@ class WPawn < Pawn
 
   def valid_ahead(board)
     self_coord = find_coordinates(board)
-    ahead_position = shift_coordinates(self_coord, 0, 1)&.values&.join
+    ahead_position = shift_coordinates(self_coord, 0, 1)&.join
     if ahead_position && board.find_square(ahead_position).occupant.nil?
       [ahead_position]
     else
@@ -31,8 +31,8 @@ class WPawn < Pawn
 
   def valid_start_jump(board)
     self_coord = find_coordinates(board)
-    ahead_position = shift_coordinates(self_coord, 0, 1)&.values&.join
-    jump_position = shift_coordinates(self_coord, 0, 2)&.values&.join
+    ahead_position = shift_coordinates(self_coord, 0, 1)&.join
+    jump_position = shift_coordinates(self_coord, 0, 2)&.join
     ahead_square = board.find_square(ahead_position)
     jump_square = board.find_square(jump_position)
     if @start_position == true && jump_square &&
@@ -53,7 +53,7 @@ class WPawn < Pawn
     end
     return [] if diagonal.nil?
 
-    diagonal_position = diagonal.values.join
+    diagonal_position = diagonal.join
     diagonal_occupant = board.find_square(diagonal_position).occupant
     if diagonal_occupant &&
        diagonal_occupant.color == 'black'

@@ -37,7 +37,7 @@ describe Piece do
   describe '#find_coordinates' do
     it 'returns a hash containing the coordinates this piece occupies' do
       allow(a3).to receive(:occupant).and_return(piece)
-      occupied_square_coordinates = { column: 'a', row: '3' }
+      occupied_square_coordinates = %w[a 3]
 
       piece_sqr = piece.find_coordinates(board)
 
@@ -48,8 +48,8 @@ describe Piece do
   describe '#shift_coordinates' do
     context 'when called with a coordinates hash and shifting values' do
       it 'returns a similar hash, shifted according to the shifting values' do
-        coord = { column: 'a', row: '3' }
-        shifted_coord = { column: 'a', row: '4' }
+        coord = %w[a 3]
+        shifted_coord = %w[a 4]
         column_shift = 0
         row_shift = 1
 
@@ -61,8 +61,8 @@ describe Piece do
 
     context 'when called with other hash and shifting values' do
       it 'returns a similar hash, shifted according to the shifting values' do
-        coord = { column: 'a', row: '3' }
-        shifted_coord = { column: 'c', row: '5' }
+        coord = %w[a 3]
+        shifted_coord = %w[c 5]
         column_shift = 2
         row_shift = 2
 
@@ -74,8 +74,8 @@ describe Piece do
 
     context 'when called with negative hash coords and shifting values' do
       it 'returns a similar hash, shifted according to the shifting values' do
-        coord = { column: 'c', row: '3' }
-        shifted_coord = { column: 'b', row: '1' }
+        coord = %w[c 3]
+        shifted_coord = %w[b 1]
         column_shift = -1
         row_shift = -2
 
@@ -87,7 +87,7 @@ describe Piece do
 
     context "when the shifted coordinates aren't valid board positions" do
       it "returns 'nil'" do
-        coord = { column: 'a', row: '1' }
+        coord = %w[a 1]
         column_shift = 0
         row_shift = -1
 

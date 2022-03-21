@@ -21,18 +21,12 @@ class King < Piece
   def adjacent_positions(board)
     self_coord = find_coordinates(board)
     all_coords = [
-      up = shift_coordinates(self_coord, 0, 1),
-      down = shift_coordinates(self_coord, 0, -1),
-      left = shift_coordinates(self_coord, -1, 0),
-      right = shift_coordinates(self_coord, 1, 0),
-      up_l = shift_coordinates(self_coord, -1, 1),
-      up_r= shift_coordinates(self_coord, 1, 1),
-      down_l = shift_coordinates(self_coord, -1, -1),
-      down_r = shift_coordinates(self_coord, 1, -1)
-    ]
+      [0, 1], [0, -1], [-1, 0], [1, 0],
+      [-1, 1], [1, 1], [-1, -1], [1, -1]
+    ].map { |coord| shift_coordinates(self_coord, coord[0], coord[1]) }
     all_coords.delete(nil)
     all_coords.map do |coord|
-      coord.values.join
+      coord.join
     end
   end
 end

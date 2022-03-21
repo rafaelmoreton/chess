@@ -147,7 +147,7 @@ class Game
   end
 
   def check_avoidable_by?(piece, color)
-    original_position = piece.find_coordinates(@board).values.join
+    original_position = piece.find_coordinates(@board).join
     original_square = @board.find_square(original_position)
 
     piece.valid_moves(@board).each do |move_position|

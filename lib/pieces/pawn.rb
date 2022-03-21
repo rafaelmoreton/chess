@@ -10,7 +10,7 @@ class Pawn < Piece
       promotion_squares = %w[a1 b1 c1 d1 e1 f1 g1 h1]
     end
     p find_coordinates(board)
-    position = find_coordinates(board).values.join
+    position = find_coordinates(board).join
     square = board.find_square(position)
     return if promotion_squares.none?(position)
 
