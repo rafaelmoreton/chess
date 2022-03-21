@@ -20,19 +20,10 @@ class Knight < Piece
   def leaping_positions(board)
     self_coord = find_coordinates(board)
     all_coords = [
-      shift_coordinates(self_coord, 2, 1),
-      shift_coordinates(self_coord, 2, -1),
-      shift_coordinates(self_coord, -2, 1),
-      shift_coordinates(self_coord, -2, -1),
-      shift_coordinates(self_coord, -1, 2),
-      shift_coordinates(self_coord, 1, 2),
-      shift_coordinates(self_coord, -1, -2),
-      shift_coordinates(self_coord, 1, -2)
-    ]
+      [2, 1], [2, -1], [-2, 1], [-2, -1],
+      [-1, 2], [1, 2], [-1, -2], [1, -2]
+    ].map { |coord| shift_coordinates(self_coord, coord[0], coord[1]) }
     all_coords.delete(nil)
-    all_coords.map do |coord|
-      coord.join
-    end
+    all_coords.map(&:join)
   end
 end
-

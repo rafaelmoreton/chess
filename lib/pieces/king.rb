@@ -25,8 +25,6 @@ class King < Piece
       [-1, 1], [1, 1], [-1, -1], [1, -1]
     ].map { |coord| shift_coordinates(self_coord, coord[0], coord[1]) }
     all_coords.delete(nil)
-    all_coords.map do |coord|
-      coord.join
-    end
+    all_coords.map(&:join)
   end
 end

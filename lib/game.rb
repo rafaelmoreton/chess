@@ -14,6 +14,56 @@ class Game
     @black = nil
   end
 
+  def new_players
+    white_name = choose_name('white')
+    black_name = choose_name('black')
+    @white = Player.new(white_name, 'white')
+    @black = Player.new(black_name, 'black')
+  end
+
+  def choose_name(player_color)
+    puts "choose a name for #{player_color} color player"
+    loop do
+      player_input = gets.chomp
+      return player_input unless player_input.empty?
+
+      puts 'enter something'
+    end
+  end
+
+  def turn
+    loop do
+      player_turn(@white)
+      @board.show
+      if check?('black')
+        return puts 'checkmate, white player win' if checkmate?('black')
+
+        puts 'black king is in check'
+      end
+      player_turn(@black)
+      @board.show
+      # rubocop: disable Style/Next
+      if check?('white')
+        # rubocop: enable Style/Next
+        return puts 'checkmate, black player win' if checkmate?('white')
+
+        puts 'white king is in check'
+      end
+    end
+  end
+
+  def player_turn(player)
+    puts "it is #{player.name}' turn"
+    until @selected_square
+      select_input = gets.chomp
+      select_square(select_input) if selection_check?(player, select_input)
+    end
+    until @selected_square.nil?
+      move_input = gets.chomp
+      move_piece_to(move_input) if move_check?(player, move_input)
+    end
+  end
+
   def select_square(position)
     @board.grid.reduce(:+).each do |square|
       @selected_square = square if square.position == position
@@ -31,35 +81,6 @@ class Game
         target_square.occupant.promotion(@board)
       end
       @selected_square = nil
-    end
-  end
-
-  def choose_name(player_color)
-    puts "choose a name for #{player_color} color player"
-    loop do
-      player_input = gets.chomp
-      return player_input unless player_input.empty?
-
-      puts 'enter something'
-    end
-  end
-
-  def new_players
-    white_name = choose_name('white')
-    black_name = choose_name('black')
-    @white = Player.new(white_name, 'white')
-    @black = Player.new(black_name, 'black')
-  end
-
-  def player_turn(player)
-    puts "it is #{player.name}' turn"
-    until @selected_square
-      select_input = gets.chomp
-      select_square(select_input) if selection_check?(player, select_input)
-    end
-    until @selected_square.nil?
-      move_input = gets.chomp
-      move_piece_to(move_input) if move_check?(player, move_input)
     end
   end
 
@@ -81,12 +102,7 @@ class Game
   def move_check?(player, input)
     target_sqr = @board.find_square(input)
     if input == '' # when input is empty select another square
-      puts 'deselected square, select another'
-      @selected_square = nil
-      until @selected_square
-        input = gets.chomp
-        select_square(input) if selection_check?(player, input)
-      end
+      reselect_square(player)
     elsif target_sqr.nil?
       puts 'invalid target'
       false
@@ -97,7 +113,7 @@ class Game
       puts 'invalid move'
       false
     elsif exposing_move?(player, target_sqr)
-      puts "You cannot let your king in check"
+      puts 'You cannot let your king in check'
       false
     else
       true
@@ -105,25 +121,16 @@ class Game
   end
   # rubocop:enable Metrics/MethodLength
 
-  def turn
-    loop do
-      player_turn(@white)
-      @board.show
-      if check?('black')
-        return puts "checkmate, white player win" if checkmate?('black')
-
-        puts "black king is in check" 
-      end
-      player_turn(@black)
-      @board.show
-      if check?('white')
-        return puts "checkmate, black player win" if checkmate?('white')
-
-        puts "white king is in check" 
-      end
+  def reselect_square(player)
+    puts 'deselected square, select another'
+    @selected_square = nil
+    until @selected_square
+      input = gets.chomp
+      select_square(input) if selection_check?(player, input)
     end
   end
 
+  # rubocop:disable Metrics/AbcSize
   def check?(color)
     king_position = nil
     threat_moves = []
@@ -136,11 +143,13 @@ class Game
     end
     threat_moves.flatten.uniq.any?(king_position)
   end
+  # rubocop:enable Metrics/AbcSize
 
   def checkmate?(color)
     @board.grid.flatten.each do |square|
-      if square.occupant&.color == color
-        return false if check_avoidable_by?(square.occupant, color)
+      if square.occupant&.color == color &&
+         check_avoidable_by?(square.occupant, color)
+        return false
       end
     end
     true
@@ -152,21 +161,19 @@ class Game
 
     piece.valid_moves(@board).each do |move_position|
       move_square = @board.find_square(move_position)
-      move_occupant = move_square.occupant
-
-      move_square.occupant = piece
-      original_square.occupant = nil
-
-      unless check?(color)
-        original_square.occupant = piece
-        move_square.occupant = move_occupant
-        return true
-      end
-
-      original_square.occupant = piece
-      move_square.occupant = move_occupant
+      return true if saving_move?(original_square, move_square, piece, color)
     end
     false
+  end
+
+  def saving_move?(original_square, move_square, piece, color)
+    move_occupant = move_square.occupant
+    move_square.occupant = piece
+    original_square.occupant = nil
+    saving = check?(color) ? false : true
+    move_square.occupant = move_occupant
+    original_square.occupant = piece
+    saving
   end
 
   def exposing_move?(player, move_square)
