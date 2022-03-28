@@ -4,9 +4,12 @@ require_relative 'piece'
 
 # Specify rules to find tower's valid movements
 class Tower < Piece
+  attr_accessor :start_position
+
   def initialize(color)
     super
     @symbol = color == 'white' ? "\u265c" : "\u2656"
+    @start_position = true
   end
 
   def valid_moves(board)

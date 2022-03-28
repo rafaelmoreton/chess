@@ -77,8 +77,10 @@ class Game
       target_square.occupant = @selected_square.occupant
       @selected_square.occupant = nil
       if target_square.occupant.is_a?(Pawn)
-        target_square.occupant.start_position = false
         target_square.occupant.promotion(@board)
+      end
+      if target_square.occupant.respond_to?(:start_position)
+        target_square.occupant.start_position = false
       end
       @selected_square = nil
     end
@@ -106,6 +108,14 @@ class Game
     elsif target_sqr.nil?
       puts 'invalid target'
       false
+    elsif @selected_square.occupant.is_a?(King) &&
+          @selected_square.occupant.castling_moves(@board).any? do
+            |castling_move|
+            target_sqr.position == castling_move
+          end
+      puts 'castling'
+      @selected_square.occupant.castle(@board, target_sqr.position)
+      true
     elsif target_sqr.occupant&.color == @selected_square.occupant.color ||
           @selected_square.occupant.valid_moves(@board).none? do |move|
             target_sqr.position == move
