@@ -32,23 +32,21 @@ class Game
   end
 
   def turn
+    active_player = @black
     loop do
-      player_turn(@white)
-      @board.show
-      if check?('black')
-        return puts 'checkmate, white player win' if checkmate?('black')
-
-        puts 'black king is in check'
+      if active_player == @black
+        active_player = @white
+        inactive_player = @black
+      else
+        active_player = @black
+        inactive_player = @white
       end
-      player_turn(@black)
       @board.show
-      # rubocop: disable Style/Next
-      if check?('white')
-        # rubocop: enable Style/Next
-        return puts 'checkmate, black player win' if checkmate?('white')
+      player_turn(active_player)
+      next unless check?(inactive_player.color)
+      return puts "checkmate, #{active_player.name} win" if checkmate?(inactive_player.color)
 
-        puts 'white king is in check'
-      end
+      puts "#{inactive_player.color} king is in check"
     end
   end
 
@@ -75,13 +73,10 @@ class Game
       next unless target_square.position == target
 
       target_square.occupant = @selected_square.occupant
+      piece = target_square.occupant
       @selected_square.occupant = nil
-      if target_square.occupant.is_a?(Pawn)
-        target_square.occupant.promotion(@board)
-      end
-      if target_square.occupant.respond_to?(:start_position)
-        target_square.occupant.start_position = false
-      end
+      piece.promotion(@board) if piece.is_a?(Pawn)
+      piece.start_position = false if piece.respond_to?(:start_position)
       @selected_square = nil
     end
   end
@@ -108,18 +103,11 @@ class Game
     elsif target_sqr.nil?
       puts 'invalid target'
       false
-    elsif @selected_square.occupant.is_a?(King) &&
-          @selected_square.occupant.castling_moves(@board).any? do
-            |castling_move|
-            target_sqr.position == castling_move
-          end
+    elsif castling_move?(target_sqr.position)
       puts 'castling'
       @selected_square.occupant.castle(@board, target_sqr.position)
       true
-    elsif target_sqr.occupant&.color == @selected_square.occupant.color ||
-          @selected_square.occupant.valid_moves(@board).none? do |move|
-            target_sqr.position == move
-          end
+    elsif invalid_move?(target_sqr)
       puts 'invalid move'
       false
     elsif exposing_move?(player, target_sqr)
@@ -131,6 +119,20 @@ class Game
   end
   # rubocop:enable Metrics/MethodLength
 
+  def castling_move?(move_target)
+    @selected_square.occupant.is_a?(King) &&
+      @selected_square.occupant.castling_moves(@board).any? do |move|
+        move_target == move
+      end
+  end
+
+  def invalid_move?(target_sqr)
+    target_sqr.occupant&.color == @selected_square.occupant.color ||
+      @selected_square.occupant.valid_moves(@board).none? do |move|
+        target_sqr.position == move
+      end
+  end
+
   def reselect_square(player)
     puts 'deselected square, select another'
     @selected_square = nil
@@ -140,7 +142,6 @@ class Game
     end
   end
 
-  # rubocop:disable Metrics/AbcSize
   def check?(color)
     king_position = nil
     threat_moves = []
@@ -153,45 +154,45 @@ class Game
     end
     threat_moves.flatten.uniq.any?(king_position)
   end
-  # rubocop:enable Metrics/AbcSize
 
   def checkmate?(color)
     @board.grid.flatten.each do |square|
       if square.occupant&.color == color &&
-         check_avoidable_by?(square.occupant, color)
+         check_avoidable_by?(square.occupant)
         return false
       end
     end
     true
   end
 
-  def check_avoidable_by?(piece, color)
+  def check_avoidable_by?(piece)
     original_position = piece.find_coordinates(@board).join
     original_square = @board.find_square(original_position)
 
     piece.valid_moves(@board).each do |move_position|
       move_square = @board.find_square(move_position)
-      return true if saving_move?(original_square, move_square, piece, color)
+      return true if saving_move?(original_square, move_square, piece)
     end
     false
   end
 
-  def saving_move?(original_square, move_square, piece, color)
-    move_occupant = move_square.occupant
+  def saving_move?(original_square, move_square, piece)
+    original_move_square_occupant = move_square.occupant
     move_square.occupant = piece
     original_square.occupant = nil
-    saving = check?(color) ? false : true
-    move_square.occupant = move_occupant
+    result = check?(piece.color) ? false : true
+    move_square.occupant = original_move_square_occupant
     original_square.occupant = piece
-    saving
+    result
   end
 
   def exposing_move?(player, move_square)
+    original_move_square_occupant = move_square.occupant
     move_square.occupant = @selected_square.occupant
     @selected_square.occupant = nil
     result = check?(player.color)
     @selected_square.occupant = move_square.occupant
-    move_square.occupant = nil
+    move_square.occupant = original_move_square_occupant
     result
   end
 end

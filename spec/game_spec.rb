@@ -223,7 +223,7 @@ describe Game do
           board.add_piece(enemy_tower, 'c2')
         end
         it 'returns true' do
-          result = game.check_avoidable_by?(king, 'white')
+          result = game.check_avoidable_by?(king)
 
           expect(result).to be true
         end
@@ -237,7 +237,7 @@ describe Game do
           board.add_piece(enemy_tower, 'c4')
         end
         it 'returns true' do
-          result = game.check_avoidable_by?(king, 'white')
+          result = game.check_avoidable_by?(king)
 
           expect(result).to be true
         end
@@ -253,7 +253,7 @@ describe Game do
           board.add_piece(enemy_tower, 'c1')
         end
         it 'returns true' do
-          result = game.check_avoidable_by?(allied_tower, 'white')
+          result = game.check_avoidable_by?(allied_tower)
 
           expect(result).to be true
         end
@@ -269,7 +269,7 @@ describe Game do
           board.add_piece(enemy_tower, 'c1')
         end
         it 'returns true' do
-          result = game.check_avoidable_by?(allied_tower, 'white')
+          result = game.check_avoidable_by?(allied_tower)
 
           expect(result).to be true
         end
@@ -289,7 +289,7 @@ describe Game do
           board.add_piece(enemy_tower3, 'd2')
         end
         it 'returns false' do
-          result = game.check_avoidable_by?(king, 'white')
+          result = game.check_avoidable_by?(king)
 
           expect(result).to be false
         end
@@ -305,7 +305,7 @@ describe Game do
           board.add_piece(enemy_tower, 'c1')
         end
         it 'returns false' do
-          result = game.check_avoidable_by?(allied_tower, 'white')
+          result = game.check_avoidable_by?(allied_tower)
 
           expect(result).to be false
         end
@@ -324,7 +324,7 @@ describe Game do
       it "the squares the piece moved into keep it's original occupant after that" do
         c1 = board.find_square('c1')
 
-        expect { game.check_avoidable_by?(allied_tower, 'white') }
+        expect { game.check_avoidable_by?(allied_tower) }
           .not_to(change { c1.occupant })
       end
     end
@@ -362,6 +362,21 @@ describe Game do
         result = game.exposing_move?(player_w, move_square)
 
         expect(result).to be true
+      end
+    end
+
+    context 'when moving the piece only to find out if the move will expose the
+    king to a check' do
+      it 'the original occupant of each square remain after the testing move' do
+        board.add_piece(king_w, 'e1')
+        board.add_piece(tower_w, 'f5')
+        board.add_piece(tower_b, 'f2')
+        game.select_square('f5')
+        move = 'f2'
+        f2 = board.find_square(move)
+
+        expect { game.exposing_move?(player_w, f2) }
+          .not_to (change { f2.occupant })
       end
     end
   end
