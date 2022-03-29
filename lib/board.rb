@@ -48,23 +48,6 @@ class Board
     square.occupant = piece
   end
 
-  def set_up_pieces
-    row2 = %w[a2 b2 c2 d2 e2 f2 g2 h2]
-    row2.each { |position| add_piece(WPawn.new('white'), position) }
-    row7 = %w[a7 b7 c7 d7 e7 f7 g7 h7]
-    row7.each { |position| add_piece(BPawn.new('black'), position) }
-    %w[a1 h1].each { |position| add_piece(Tower.new('white'), position) }
-    %w[a8 h8].each { |position| add_piece(Tower.new('black'), position) }
-    %w[c1 f1].each { |position| add_piece(Bishop.new('white'), position) }
-    %w[c8 f8].each { |position| add_piece(Bishop.new('black'), position) }
-    %w[b1 g1].each { |position| add_piece(Knight.new('white'), position) }
-    %w[b8 g8].each { |position| add_piece(Knight.new('black'), position) }
-    add_piece(Queen.new('white'), 'd1')
-    add_piece(Queen.new('black'), 'd8')
-    add_piece(King.new('white'), 'e1')
-    add_piece(King.new('black'), 'e8')
-  end
-
   private
 
   def new_grid

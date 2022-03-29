@@ -7,11 +7,14 @@ require_relative 'player'
 # pieces. The Game methods integrates those inner objects into an instance of
 # game capable of running an entire chess match.
 class Game
+  require 'yaml'
+
   def initialize
     @board = Board.new
     @selected_square = nil
     @white = nil
     @black = nil
+
   end
 
   def new_players
@@ -19,6 +22,8 @@ class Game
     black_name = choose_name('black')
     @white = Player.new(white_name, 'white')
     @black = Player.new(black_name, 'black')
+    @active_player = @white
+    @inactive_player = @black
   end
 
   def choose_name(player_color)
@@ -31,22 +36,32 @@ class Game
     end
   end
 
-  def turn
-    active_player = @black
-    loop do
-      if active_player == @black
-        active_player = @white
-        inactive_player = @black
-      else
-        active_player = @black
-        inactive_player = @white
-      end
-      @board.show
-      player_turn(active_player)
-      next unless check?(inactive_player.color)
-      return puts "checkmate, #{active_player.name} win" if checkmate?(inactive_player.color)
+  def set_up_pieces
+    row2 = %w[a2 b2 c2 d2 e2 f2 g2 h2]
+    row2.each { |position| @board.add_piece(WPawn.new('white'), position) }
+    row7 = %w[a7 b7 c7 d7 e7 f7 g7 h7]
+    row7.each { |position| @board.add_piece(BPawn.new('black'), position) }
+    %w[a1 h1].each { |position| @board.add_piece(Tower.new('white'), position) }
+    %w[a8 h8].each { |position| @board.add_piece(Tower.new('black'), position) }
+    %w[c1 f1].each { |position| @board.add_piece(Bishop.new('white'), position) }
+    %w[c8 f8].each { |position| @board.add_piece(Bishop.new('black'), position) }
+    %w[b1 g1].each { |position| @board.add_piece(Knight.new('white'), position) }
+    %w[b8 g8].each { |position| @board.add_piece(Knight.new('black'), position) }
+    @board.add_piece(Queen.new('white'), 'd1')
+    @board.add_piece(Queen.new('black'), 'd8')
+    @board.add_piece(King.new('white'), 'e1')
+    @board.add_piece(King.new('black'), 'e8')
+  end
 
-      puts "#{inactive_player.color} king is in check"
+  def turn
+    loop do
+      @board.show
+      return loadgame if player_turn(@active_player) == 'loadgame'
+
+      next unless check?(@inactive_player.color)
+      return puts "checkmate, #{@active_player.name} win" if checkmate?(@inactive_player.color)
+
+      puts "#{@inactive_player.color} king is in check"
     end
   end
 
@@ -54,12 +69,29 @@ class Game
     puts "it is #{player.name}' turn"
     until @selected_square
       select_input = gets.chomp
+      case select_input
+      when 'save'
+        savegame
+        select_input = gets.chomp
+      when 'load'
+        return 'loadgame'
+      end
       select_square(select_input) if selection_check?(player, select_input)
     end
     until @selected_square.nil?
       move_input = gets.chomp
+      case move_input
+      when 'save'
+        savegame
+        move_input = gets.chomp
+      when 'load'
+        return 'loadgame'
+      end
       move_piece_to(move_input) if move_check?(player, move_input)
     end
+
+    @active_player = @inactive_player
+    @inactive_player = player
   end
 
   def select_square(position)
@@ -194,5 +226,30 @@ class Game
     @selected_square.occupant = move_square.occupant
     move_square.occupant = original_move_square_occupant
     result
+  end
+
+  def savegame
+    puts "\nsave game as:"
+    savename = "savegames/#{gets.chomp}.yaml"
+    serialized = YAML.dump(self)
+    file = File.open(savename, 'w')
+    file.puts serialized
+    file.close
+    puts "game saved\n "
+  end
+
+  def loadgame
+    puts "\nsaved games list:"
+    file_list = Dir.glob('savegames/*').map do |filename|
+      filename[10..-6]
+    end
+    puts file_list.join("\n")
+    puts "\nwhich game do you want to load?"
+    loadname = "savegames/#{gets.chomp}.yaml"
+    file = File.open(loadname, 'r')
+    serialized = file.read
+    file.close
+    game = YAML.load(serialized)
+    game.turn
   end
 end

@@ -18,7 +18,7 @@ describe Game do
         squares.find { |sqr| sqr.position == target_input }
       end
       before do
-        board.set_up_pieces
+        game.set_up_pieces
         game.instance_variable_set(:@selected_square, selected_sqr)
       end
 
@@ -61,7 +61,7 @@ describe Game do
     context 'when player input is valid and there is a piece on that square,
     but it is of a different color than the player' do
       before do
-        board.set_up_pieces
+        game.set_up_pieces
       end
       it 'outputs invalid selection warn and returns false' do
         warn = "there is no #{player.color} piece on this square"
@@ -75,7 +75,7 @@ describe Game do
     context 'when player input is valid and there is a piece of his color on
     that square' do
       before do
-        board.set_up_pieces
+        game.set_up_pieces
       end
       it 'returns true' do
         valid_input = 'd2'
@@ -92,7 +92,7 @@ describe Game do
       squares.find { |sqr| sqr.position == position_to_select }
     end
     before do
-      board.set_up_pieces
+      game.set_up_pieces
       game.instance_variable_set(:@selected_square, selected_sqr)
       allow(selected_sqr.occupant).to(
         receive(:valid_moves).with(board).and_return(%w[c3 c4 d5])
