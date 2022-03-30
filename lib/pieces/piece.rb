@@ -37,7 +37,7 @@ class Piece
     next_coord = shift_coordinates(current_coord, direction[0], direction[1])
     return positions if next_coord.nil?
 
-    next_square = board.find_square(next_coord.join)
+    next_square = board.square(next_coord.join)
     if next_square.occupant&.color == @color
       positions
     elsif next_square.occupant && next_square.occupant.color != @color

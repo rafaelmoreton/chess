@@ -15,7 +15,7 @@ class King < Piece
   def valid_moves(board)
     valid = []
     adjacent_positions(board).map do |position|
-      occupant = board.find_square(position).occupant
+      occupant = board.square(position).occupant
       valid << position unless occupant&.color == @color
     end
     valid
@@ -35,11 +35,11 @@ class King < Piece
     leaped_sqr_column = (
       (king_move[0].ord + find_coordinates(board)[0].ord) / 2
     ).chr
-    leaped_sqr = board.find_square(leaped_sqr_column + king_move[1])
+    leaped_sqr = board.square(leaped_sqr_column + king_move[1])
     find_towers(board).map do |tower|
       next unless tower.horizontal(board).any?(leaped_sqr.position)
 
-      tower_square = board.find_square(tower.find_coordinates(board).join)
+      tower_square = board.square(tower.find_coordinates(board).join)
       leaped_sqr.occupant = tower
       tower_square.occupant = nil
     end

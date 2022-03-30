@@ -102,7 +102,7 @@ describe Piece do
     context 'when passed values for right direction (1, 0)' do
       it 'returns an array containing the all valid coordinates to the right' do
         allow(c3).to receive(:occupant).and_return(piece)
-        allow(board).to receive(:find_square).and_return(
+        allow(board).to receive(:square).and_return(
           d3, e3, f3, g3, h3, nil
         )
         right_coordinates = %w[d3 e3 f3 g3 h3]
@@ -117,7 +117,7 @@ describe Piece do
     context 'when passed values for down direction (0, -1)' do
       it 'returns an array containing the all valid coordinates to down' do
         allow(c3).to receive(:occupant).and_return(piece)
-        allow(board).to receive(:find_square).and_return(c2, c1, nil)
+        allow(board).to receive(:square).and_return(c2, c1, nil)
         down_coordinates = %w[c2 c1]
         down_dir = [0, -1]
 
@@ -130,7 +130,7 @@ describe Piece do
     context 'when passed values for down right direction (1, -1)' do
       it 'returns an array containing the all valid coordinates to down_r' do
         allow(c4).to receive(:occupant).and_return(piece)
-        allow(board).to receive(:find_square).and_return(d3, e2, f1, nil)
+        allow(board).to receive(:square).and_return(d3, e2, f1, nil)
         down_r_coordinates = %w[d3 e2 f1]
         down_r_dir = [1, -1]
 
@@ -146,7 +146,7 @@ describe Piece do
       piece's, not including it" do
         allow(c4).to receive(:occupant).and_return(piece)
         allow(c7).to receive(:occupant).and_return(same_color_piece)
-        allow(board).to receive(:find_square).and_return(c5, c6, c7, nil)
+        allow(board).to receive(:square).and_return(c5, c6, c7, nil)
         up_coordinates = %w[c5 c6]
         up_dir = [0, 1]
 
@@ -162,7 +162,7 @@ describe Piece do
       piece's, including it" do
         allow(c4).to receive(:occupant).and_return(piece)
         allow(c7).to receive(:occupant).and_return(opposite_color_piece)
-        allow(board).to receive(:find_square).and_return(c5, c6, c7, nil)
+        allow(board).to receive(:square).and_return(c5, c6, c7, nil)
         up_coordinates = %w[c5 c6 c7]
         up_dir = [0, 1]
 

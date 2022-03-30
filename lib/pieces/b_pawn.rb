@@ -22,7 +22,7 @@ class BPawn < Pawn
   def valid_ahead(board)
     self_coord = find_coordinates(board)
     ahead_position = shift_coordinates(self_coord, 0, -1)&.join
-    if ahead_position && board.find_square(ahead_position).occupant.nil?
+    if ahead_position && board.square(ahead_position).occupant.nil?
       [ahead_position]
     else
       []
@@ -33,8 +33,8 @@ class BPawn < Pawn
     self_coord = find_coordinates(board)
     ahead_position = shift_coordinates(self_coord, 0, -1)&.join
     jump_position = shift_coordinates(self_coord, 0, -2)&.join
-    ahead_square = board.find_square(ahead_position)
-    jump_square = board.find_square(jump_position)
+    ahead_square = board.square(ahead_position)
+    jump_square = board.square(jump_position)
     if @start_position == true && jump_square &&
        ahead_square.occupant.nil? && jump_square.occupant.nil?
       [jump_position]
@@ -54,7 +54,7 @@ class BPawn < Pawn
     return [] if diagonal.nil?
 
     diagonal_position = diagonal.join
-    diagonal_occupant = board.find_square(diagonal_position).occupant
+    diagonal_occupant = board.square(diagonal_position).occupant
     if diagonal_occupant &&
        diagonal_occupant.color == 'white'
       [diagonal_position]

@@ -322,7 +322,7 @@ describe Game do
         board.add_piece(enemy_tower, 'c1')
       end
       it "the squares the piece moved into keep it's original occupant after that" do
-        c1 = board.find_square('c1')
+        c1 = board.square('c1')
 
         expect { game.check_avoidable_by?(allied_tower) }
           .not_to(change { c1.occupant })
@@ -342,7 +342,7 @@ describe Game do
         board.add_piece(tower_b, 'h1')
         game.select_square('c1')
         move = 'e1'
-        move_square = board.find_square(move)
+        move_square = board.square(move)
 
         result = game.exposing_move?(player_w, move_square)
 
@@ -357,7 +357,7 @@ describe Game do
         board.add_piece(tower_b, 'h1')
         game.select_square('c1')
         move = 'c8'
-        move_square = board.find_square(move)
+        move_square = board.square(move)
 
         result = game.exposing_move?(player_w, move_square)
 
@@ -373,7 +373,7 @@ describe Game do
         board.add_piece(tower_b, 'f2')
         game.select_square('f5')
         move = 'f2'
-        f2 = board.find_square(move)
+        f2 = board.square(move)
 
         expect { game.exposing_move?(player_w, f2) }
           .not_to (change { f2.occupant })

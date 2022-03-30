@@ -38,7 +38,7 @@ describe WPawn do
     context 'when there is no piece ahead of the pawn' do
       before do
         allow(b1).to receive(:occupant).and_return(white_pawn)
-        allow(board).to receive(:find_square).and_return(b2)
+        allow(board).to receive(:square).and_return(b2)
       end
       it 'returns the square ahead in an array' do
         valid_ahead = white_pawn.valid_ahead(board)
@@ -51,7 +51,7 @@ describe WPawn do
       before do
         allow(b1).to receive(:occupant).and_return(white_pawn)
         allow(b2).to receive(:occupant).and_return(:ahead_white_pawn)
-        allow(board).to receive(:find_square).and_return(b2)
+        allow(board).to receive(:square).and_return(b2)
       end
       it 'returns an empty array' do
         valid_ahead = white_pawn.valid_ahead(board)
@@ -64,7 +64,7 @@ describe WPawn do
       before do
         allow(b1).to receive(:occupant).and_return(white_pawn)
         allow(b2).to receive(:occupant).and_return(:ahead_black_pawn)
-        allow(board).to receive(:find_square).and_return(b2)
+        allow(board).to receive(:square).and_return(b2)
       end
       it 'returns an empty array' do
         valid_ahead = white_pawn.valid_ahead(board)
@@ -75,7 +75,7 @@ describe WPawn do
     context 'when the pawn reaches the end of the board' do
       it 'returns an empty array' do
         allow(c8).to receive(:occupant).and_return(white_pawn)
-        allow(board).to receive(:find_square)
+        allow(board).to receive(:square)
 
         result = white_pawn.valid_ahead(board)
 
@@ -87,7 +87,7 @@ describe WPawn do
   describe '#valid_start_jump' do
     before do
       allow(b1).to receive(:occupant).and_return(white_pawn)
-      allow(board).to receive(:find_square).and_return(b2, b3)
+      allow(board).to receive(:square).and_return(b2, b3)
     end
 
     context 'when pawn is not at start position' do
@@ -145,7 +145,7 @@ describe WPawn do
     context 'when the pawn reaches the end of the board' do
       it 'returns an empty array' do
         allow(c8).to receive(:occupant).and_return(white_pawn)
-        allow(board).to receive(:find_square)
+        allow(board).to receive(:square)
 
         result = white_pawn.valid_start_jump(board)
 
@@ -158,7 +158,7 @@ describe WPawn do
     context 'when direction is left and pawn is at left edge of board' do
       before do
         allow(a1).to receive(:occupant).and_return(white_pawn)
-        allow(board).to receive(:find_square)
+        allow(board).to receive(:square)
       end
       it 'returns an empty array' do
         result = white_pawn.valid_diagonal(board, 'left')
@@ -170,7 +170,7 @@ describe WPawn do
     context 'when there is no piece at the diagonal' do
       before do
         allow(b1).to receive(:occupant).and_return(white_pawn)
-        allow(board).to receive(:find_square).and_return(a2)
+        allow(board).to receive(:square).and_return(a2)
       end
       it 'returns an empty array' do
         valid_diagonal = white_pawn.valid_diagonal(board, 'left')
@@ -188,14 +188,14 @@ describe WPawn do
       end
       context 'when it is a same color piece' do
         it 'returns an empty array' do
-          allow(board).to receive(:find_square).and_return(a2)
+          allow(board).to receive(:square).and_return(a2)
           valid_diagonal = white_pawn.valid_diagonal(board, 'left')
           expect(valid_diagonal).to eq []
         end
       end
       context 'when it is an opposite color piece' do
         it 'retuns diagonal square in an array' do
-          allow(board).to receive(:find_square).and_return(c2)
+          allow(board).to receive(:square).and_return(c2)
           valid_diagonal = white_pawn.valid_diagonal(board, 'right')
           expect(valid_diagonal).to eq ['c2']
         end
@@ -205,7 +205,7 @@ describe WPawn do
     context 'when the pawn reaches the end of the board' do
       it 'returns an empty array' do
         allow(c8).to receive(:occupant).and_return(white_pawn)
-        allow(board).to receive(:find_square)
+        allow(board).to receive(:square)
 
         result = white_pawn.valid_diagonal(board, 'left')
 

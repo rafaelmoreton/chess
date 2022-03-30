@@ -13,7 +13,7 @@ class Board
     @grid = new_grid
   end
 
-  def find_square(square_position)
+  def square(square_position)
     @grid.flatten.find { |square| square.position == square_position }
   end
 
@@ -36,7 +36,7 @@ class Board
   end
 
   def add_piece(piece, position)
-    square = find_square(position)
+    square = square(position)
     square.occupant = piece
   end
 

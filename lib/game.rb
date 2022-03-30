@@ -120,7 +120,7 @@ class Game
 
   # rubocop:disable Metrics/MethodLength
   def selection_check?(player, input)
-    selected_sqr = @board.find_square(input)
+    selected_sqr = @board.square(input)
     if selected_sqr.nil?
       puts 'invalid input'
       false
@@ -134,7 +134,7 @@ class Game
   end
 
   def move_check?(player, input)
-    target_sqr = @board.find_square(input)
+    target_sqr = @board.square(input)
     if input == '' # when input is empty select another square
       reselect_square(player)
     elsif target_sqr.nil?
@@ -204,10 +204,10 @@ class Game
 
   def check_avoidable_by?(piece)
     original_position = piece.find_coordinates(@board).join
-    original_square = @board.find_square(original_position)
+    original_square = @board.square(original_position)
 
     piece.valid_moves(@board).each do |move_position|
-      move_square = @board.find_square(move_position)
+      move_square = @board.square(move_position)
       return true if saving_move?(original_square, move_square, piece)
     end
     false

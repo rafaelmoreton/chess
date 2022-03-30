@@ -186,8 +186,8 @@ describe King do
     it 'moves the tower to which the king is castling to the square leaped by
     the king' do
       king_move = 'c1'
-      leaped_sqr = board.find_square('d1')
-      tower_sqr = board.find_square('a1')
+      leaped_sqr = board.square('d1')
+      tower_sqr = board.square('a1')
 
       expect { king.castle(board, king_move) }.to(
         change { leaped_sqr.occupant }.to(castling_tower) &

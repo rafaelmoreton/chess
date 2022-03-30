@@ -11,7 +11,7 @@ class Knight < Piece
   def valid_moves(board)
     valid = []
     leaping_positions(board).map do |position|
-      occupant = board.find_square(position).occupant
+      occupant = board.square(position).occupant
       valid << position unless occupant&.color == @color
     end
     valid
