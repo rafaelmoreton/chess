@@ -17,27 +17,12 @@ class Board
     @grid.flatten.find { |square| square.position == square_position }
   end
 
-  def show
-    checkered_grid = @grid.map.with_index do |row, row_index|
-      checkered_row(row, row_index)
-    end
-    reverse_index = 8
-    wrapped_grid = checkered_grid.map do |row|
-
-      row.push(" #{reverse_index}\n")
-      row.unshift("#{reverse_index} ")
-      reverse_index -= 1
-      row
-    end
-    columns_index = ['   a  b  c  d  e  f  g  h']
-    indexed_grid = columns_index + ["\n"] + wrapped_grid + columns_index
-
-    puts indexed_grid.join
+  def add_piece(piece, position)
+    square(position).occupant = piece
   end
 
-  def add_piece(piece, position)
-    square = square(position)
-    square.occupant = piece
+  def show
+    puts wrapped_grid.join
   end
 
   private
@@ -61,6 +46,31 @@ class Board
       column_letter = column_letter.succ
     end
     row
+  end
+
+  def wrapped_grid
+    indexed_grid.map do |row|
+      row << "\n"
+    end
+  end
+
+  def indexed_grid
+    rows_index = 8
+    grid_row_indexed = checkered_grid.map do |row|
+      row.push(" #{rows_index}")
+      row.unshift("#{rows_index} ")
+      rows_index -= 1
+      row
+    end
+    columns_index = '   a  b  c  d  e  f  g  h'
+    grid_row_indexed.push([columns_index])
+    grid_row_indexed.unshift([columns_index])
+  end
+
+  def checkered_grid
+    @grid.map.with_index do |row, row_index|
+      checkered_row(row, row_index)
+    end
   end
 
   def checkered_row(row, row_index)
