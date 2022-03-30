@@ -1,20 +1,25 @@
 # frozen_string_literal: true
 
+# rubocop: disable Lint/NonDeterministicRequireOrder
+
 require_relative 'board'
 require_relative 'player'
+require_relative 'serialize'
+Dir[File.join(__dir__, 'pieces', '*.rb')].each do |piece_file|
+  require piece_file
+end
 
 # Game objects are composed of a board object, two players and several chess
 # pieces. The Game methods integrates those inner objects into an instance of
 # game capable of running an entire chess match.
 class Game
-  require 'yaml'
+  extend Serialize
 
   def initialize
     @board = Board.new
     @selected_square = nil
     @white = nil
     @black = nil
-
   end
 
   def new_players
@@ -56,12 +61,12 @@ class Game
   def turn
     loop do
       @board.show
-      return loadgame if player_turn(@active_player) == 'loadgame'
+      return Game.load_game if player_turn(@active_player) == 'loadgame'
+      # Here player turn has already switched active and inactive players
+      next unless check?(@active_player.color)
+      return puts "checkmate, #{@inactive_player.name} win" if checkmate?(@active_player.color)
 
-      next unless check?(@inactive_player.color)
-      return puts "checkmate, #{@active_player.name} win" if checkmate?(@inactive_player.color)
-
-      puts "#{@inactive_player.color} king is in check"
+      puts "#{@active_player.color} king is in check"
     end
   end
 
@@ -71,7 +76,7 @@ class Game
       select_input = gets.chomp
       case select_input
       when 'save'
-        savegame
+        Game.save_game(self)
         select_input = gets.chomp
       when 'load'
         return 'loadgame'
@@ -82,7 +87,7 @@ class Game
       move_input = gets.chomp
       case move_input
       when 'save'
-        savegame
+        Game.save_game(self)
         move_input = gets.chomp
       when 'load'
         return 'loadgame'
@@ -227,29 +232,6 @@ class Game
     move_square.occupant = original_move_square_occupant
     result
   end
-
-  def savegame
-    puts "\nsave game as:"
-    savename = "savegames/#{gets.chomp}.yaml"
-    serialized = YAML.dump(self)
-    file = File.open(savename, 'w')
-    file.puts serialized
-    file.close
-    puts "game saved\n "
-  end
-
-  def loadgame
-    puts "\nsaved games list:"
-    file_list = Dir.glob('savegames/*').map do |filename|
-      filename[10..-6]
-    end
-    puts file_list.join("\n")
-    puts "\nwhich game do you want to load?"
-    loadname = "savegames/#{gets.chomp}.yaml"
-    file = File.open(loadname, 'r')
-    serialized = file.read
-    file.close
-    game = YAML.load(serialized)
-    game.turn
-  end
 end
+
+# rubocop: enable Lint/NonDeterministicRequireOrder

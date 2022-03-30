@@ -1,14 +1,6 @@
 # frozen_string_literal: true
 
 require_relative 'square'
-require_relative './pieces/piece'
-require_relative './pieces/w_pawn'
-require_relative './pieces/b_pawn'
-require_relative './pieces/tower'
-require_relative './pieces/bishop'
-require_relative './pieces/queen'
-require_relative './pieces/king'
-require_relative './pieces/knight'
 
 # Board objects are responsible for keeping track of an 8x8 grid of squares and
 # the pieces that occupy them. The addition of pieces to the board pertains
