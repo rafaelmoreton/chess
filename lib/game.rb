@@ -32,12 +32,11 @@ class Game
   end
 
   def choose_name(player_color)
-    puts "choose a name for #{player_color} color player"
+    system('clear')
     loop do
+      puts "Choose a name for the #{player_color} pieces player"
       player_input = gets.chomp
       return player_input unless player_input.empty?
-
-      puts 'enter something'
     end
   end
 
@@ -61,18 +60,22 @@ class Game
   def turn
     loop do
       @board.show
+      puts "#{@active_player.color.capitalize} king is in check" if check?(@active_player.color)
       return Game.load_game if player_turn(@active_player) == 'loadgame'
       # Here player turn has already switched active and inactive players
       next unless check?(@active_player.color)
-      return puts "checkmate, #{@inactive_player.name} win" if checkmate?(@active_player.color)
-
-      puts "#{@active_player.color} king is in check"
+      if checkmate?(@active_player.color)
+        puts "Checkmate, #{@inactive_player.name} win"
+        sleep(2)
+        return
+      end
     end
   end
 
   def player_turn(player)
-    puts "it is #{player.name}' turn"
+    puts "\n#{player.name}'s turn"
     until @selected_square
+      puts "Select a piece"
       select_input = gets.chomp
       case select_input
       when 'save'
@@ -84,6 +87,7 @@ class Game
       select_square(select_input) if selection_check?(player, select_input)
     end
     until @selected_square.nil?
+      puts "Move #{@selected_square.position} #{@selected_square.occupant.piece_name}"
       move_input = gets.chomp
       case move_input
       when 'save'
@@ -120,13 +124,15 @@ class Game
 
   # rubocop:disable Metrics/MethodLength
   def selection_check?(player, input)
+    system('clear')
+    puts @board.show
     selected_sqr = @board.square(input)
     if selected_sqr.nil?
-      puts 'invalid input'
+      puts 'This is not a valid square'
       false
     elsif selected_sqr.occupant.nil? ||
           selected_sqr.occupant&.color != player.color
-      puts "there is no #{player.color} piece on this square"
+      puts "There is no #{player.color} piece on this square"
       false
     else
       true
@@ -134,21 +140,24 @@ class Game
   end
 
   def move_check?(player, input)
+    system('clear')
+    puts @board.show
     target_sqr = @board.square(input)
     if input == '' # when input is empty select another square
       reselect_square(player)
     elsif target_sqr.nil?
-      puts 'invalid target'
+      puts "Invalid move"
       false
     elsif castling_move?(target_sqr.position)
-      puts 'castling'
+      puts 'Castling'
+      sleep(1)
       @selected_square.occupant.castle(@board, target_sqr.position)
       true
     elsif invalid_move?(target_sqr)
-      puts 'invalid move'
+      puts 'Invalid move'
       false
     elsif exposing_move?(player, target_sqr)
-      puts 'You cannot let your king in check'
+      puts 'You cannot place or leave your king in check'
       false
     else
       true
@@ -171,9 +180,10 @@ class Game
   end
 
   def reselect_square(player)
-    puts 'deselected square, select another'
+    puts "#{@selected_square.occupant.piece_name} at #{@selected_square.position} deselected"
     @selected_square = nil
     until @selected_square
+      puts "Select a piece"
       input = gets.chomp
       select_square(input) if selection_check?(player, input)
     end

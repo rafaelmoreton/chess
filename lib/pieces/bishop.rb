@@ -6,6 +6,7 @@ require_relative 'piece'
 class Bishop < Piece
   def initialize(color)
     super
+    @piece_name = "Bishop"
     @symbol = color == 'white' ? "\u265d" : "\u2657"
   end
 

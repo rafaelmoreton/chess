@@ -22,6 +22,7 @@ class Board
   end
 
   def show
+    system('clear')
     puts wrapped_grid.join
   end
 

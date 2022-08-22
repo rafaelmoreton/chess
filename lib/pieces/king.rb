@@ -10,6 +10,7 @@ class King < Piece
     super
     @symbol = color == 'white' ? "\u265a" : "\u2654"
     @start_position = true
+    @piece_name = "King"
   end
 
   def valid_moves(board)

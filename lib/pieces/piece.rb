@@ -3,7 +3,7 @@
 # Parent of every kind of piece's class (Pawn, King, etc.). It is used to store
 # common attributes and methods.
 class Piece
-  attr_reader :color, :symbol
+  attr_reader :color, :symbol, :piece_name
 
   def initialize(color)
     @color = color

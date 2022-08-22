@@ -11,16 +11,19 @@ NEW_LOAD_TEXT = <<~NEW_LOAD_TEXT
 NEW_LOAD_TEXT
 
 def new_load_prompt
+  system('clear')
   puts NEW_LOAD_TEXT
   case gets.chomp
   when 'n'
-    puts 'New game started'
+    puts "\nNew game starting..."
     sleep(1)
     game = Game.new
     game.set_up_pieces
     game.new_players
     game.turn
   when 'l'
+    puts "\nNew game loading..."
+    sleep(1)
     Game.load_game
   else
     new_load_prompt

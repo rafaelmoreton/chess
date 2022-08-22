@@ -7,6 +7,7 @@ class Queen < Piece
   def initialize(color)
     super
     @symbol = color == 'white' ? "\u265b" : "\u2655"
+    @piece_name = "Queen"
   end
 
   def valid_moves(board)
