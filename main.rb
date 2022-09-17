@@ -30,8 +30,8 @@ def new_load_prompt
   end
 end
 
-puts 'Chess game started'
-sleep(1)
+puts 'CLI Chess starting...'
+sleep(2)
 loop do
   new_load_prompt
 end

@@ -14,6 +14,13 @@ Altough playing online requires no setting up, be mindful that the play experien
 ### Play Offline
 To play offline you need to have ruby >= 2.7.4 installed. Then simply clone this repo, navigate to it's directory (`cd chess`) and run the game (`ruby main.rb`).
 
+It's recommended to increase the font size of your CLI to better visualize the pieces in the board.
+
 ### Game Controls
-- To select one of your pieces, enter the coordinates that piece's square (example: a4).
-- To Enter the coordinates of a square which is a valid move for the selected piece
+- The game use board coordinates to select and move pieces. (examples: `a4`, `c8`, `h1`, `d2`)
+- To select one of your pieces enter the coordinates of that piece's square.
+- To move a selected piece enter the coordinates of a valid move square for that piece.
+- To deselect a piece enter nothing (simply press enter).
+- The castling move is done by moving the king two squares to it's left or right while fulfilling the all the requisites of castling.
+- Enter `save` to save the current match.
+- Enter `load` to load a previously saved match. The current match will be lost unless previously saved.

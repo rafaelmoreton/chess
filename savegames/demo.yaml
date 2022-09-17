@@ -1,0 +1,314 @@
+--- !ruby/object:Game
+board: !ruby/object:Board
+  grid:
+  - - !ruby/object:Square
+      position: a8
+      occupant: 
+    - !ruby/object:Square
+      position: b8
+      occupant: !ruby/object:Knight
+        color: black
+        symbol: "♘"
+        piece_name: Knight
+    - !ruby/object:Square
+      position: c8
+      occupant: 
+    - !ruby/object:Square
+      position: d8
+      occupant: !ruby/object:Queen
+        color: black
+        symbol: "♕"
+        piece_name: Queen
+    - !ruby/object:Square
+      position: e8
+      occupant: !ruby/object:King
+        color: black
+        symbol: "♔"
+        start_position: true
+        piece_name: King
+    - !ruby/object:Square
+      position: f8
+      occupant: !ruby/object:Bishop
+        color: black
+        piece_name: Bishop
+        symbol: "♗"
+    - !ruby/object:Square
+      position: g8
+      occupant: 
+    - !ruby/object:Square
+      position: h8
+      occupant: !ruby/object:Tower
+        color: black
+        symbol: "♖"
+        start_position: true
+        piece_name: Tower
+  - - !ruby/object:Square
+      position: a7
+      occupant: 
+    - !ruby/object:Square
+      position: b7
+      occupant: !ruby/object:BPawn
+        color: black
+        piece_name: Pawn
+        symbol: "♙"
+        start_position: true
+    - !ruby/object:Square
+      position: c7
+      occupant: !ruby/object:BPawn
+        color: black
+        piece_name: Pawn
+        symbol: "♙"
+        start_position: true
+    - !ruby/object:Square
+      position: d7
+      occupant: 
+    - !ruby/object:Square
+      position: e7
+      occupant: 
+    - !ruby/object:Square
+      position: f7
+      occupant: !ruby/object:BPawn
+        color: black
+        piece_name: Pawn
+        symbol: "♙"
+        start_position: true
+    - !ruby/object:Square
+      position: g7
+      occupant: !ruby/object:BPawn
+        color: black
+        piece_name: Pawn
+        symbol: "♙"
+        start_position: true
+    - !ruby/object:Square
+      position: h7
+      occupant: !ruby/object:BPawn
+        color: black
+        piece_name: Pawn
+        symbol: "♙"
+        start_position: true
+  - - !ruby/object:Square
+      position: a6
+      occupant: !ruby/object:Tower
+        color: black
+        symbol: "♖"
+        start_position: false
+        piece_name: Tower
+    - !ruby/object:Square
+      position: b6
+      occupant: 
+    - !ruby/object:Square
+      position: c6
+      occupant: 
+    - !ruby/object:Square
+      position: d6
+      occupant: !ruby/object:BPawn
+        color: black
+        piece_name: Pawn
+        symbol: "♙"
+        start_position: false
+    - !ruby/object:Square
+      position: e6
+      occupant: 
+    - !ruby/object:Square
+      position: f6
+      occupant: !ruby/object:Knight
+        color: black
+        symbol: "♘"
+        piece_name: Knight
+    - !ruby/object:Square
+      position: g6
+      occupant: 
+    - !ruby/object:Square
+      position: h6
+      occupant: 
+  - - !ruby/object:Square
+      position: a5
+      occupant: !ruby/object:BPawn
+        color: black
+        piece_name: Pawn
+        symbol: "♙"
+        start_position: false
+    - !ruby/object:Square
+      position: b5
+      occupant: 
+    - !ruby/object:Square
+      position: c5
+      occupant: 
+    - !ruby/object:Square
+      position: d5
+      occupant: 
+    - !ruby/object:Square
+      position: e5
+      occupant: 
+    - !ruby/object:Square
+      position: f5
+      occupant: !ruby/object:Bishop
+        color: black
+        piece_name: Bishop
+        symbol: "♗"
+    - !ruby/object:Square
+      position: g5
+      occupant: 
+    - !ruby/object:Square
+      position: h5
+      occupant: 
+  - - !ruby/object:Square
+      position: a4
+      occupant: !ruby/object:Queen
+        color: white
+        symbol: "♛"
+        piece_name: Queen
+    - !ruby/object:Square
+      position: b4
+      occupant: 
+    - !ruby/object:Square
+      position: c4
+      occupant: 
+    - !ruby/object:Square
+      position: d4
+      occupant: !ruby/object:WPawn
+        color: white
+        piece_name: Pawn
+        symbol: "♟"
+        start_position: false
+    - !ruby/object:Square
+      position: e4
+      occupant: 
+    - !ruby/object:Square
+      position: f4
+      occupant: !ruby/object:Bishop
+        color: white
+        piece_name: Bishop
+        symbol: "♝"
+    - !ruby/object:Square
+      position: g4
+      occupant: 
+    - !ruby/object:Square
+      position: h4
+      occupant: 
+  - - !ruby/object:Square
+      position: a3
+      occupant: 
+    - !ruby/object:Square
+      position: b3
+      occupant: 
+    - !ruby/object:Square
+      position: c3
+      occupant: 
+    - !ruby/object:Square
+      position: d3
+      occupant: 
+    - !ruby/object:Square
+      position: e3
+      occupant: 
+    - !ruby/object:Square
+      position: f3
+      occupant: !ruby/object:Knight
+        color: white
+        symbol: "♞"
+        piece_name: Knight
+    - !ruby/object:Square
+      position: g3
+      occupant: 
+    - !ruby/object:Square
+      position: h3
+      occupant: 
+  - - !ruby/object:Square
+      position: a2
+      occupant: !ruby/object:WPawn
+        color: white
+        piece_name: Pawn
+        symbol: "♟"
+        start_position: true
+    - !ruby/object:Square
+      position: b2
+      occupant: !ruby/object:WPawn
+        color: white
+        piece_name: Pawn
+        symbol: "♟"
+        start_position: true
+    - !ruby/object:Square
+      position: c2
+      occupant: 
+    - !ruby/object:Square
+      position: d2
+      occupant: 
+    - !ruby/object:Square
+      position: e2
+      occupant: !ruby/object:WPawn
+        color: white
+        piece_name: Pawn
+        symbol: "♟"
+        start_position: true
+    - !ruby/object:Square
+      position: f2
+      occupant: !ruby/object:WPawn
+        color: white
+        piece_name: Pawn
+        symbol: "♟"
+        start_position: true
+    - !ruby/object:Square
+      position: g2
+      occupant: !ruby/object:WPawn
+        color: white
+        piece_name: Pawn
+        symbol: "♟"
+        start_position: true
+    - !ruby/object:Square
+      position: h2
+      occupant: !ruby/object:WPawn
+        color: white
+        piece_name: Pawn
+        symbol: "♟"
+        start_position: true
+  - - !ruby/object:Square
+      position: a1
+      occupant: !ruby/object:Tower
+        color: white
+        symbol: "♜"
+        start_position: true
+        piece_name: Tower
+    - !ruby/object:Square
+      position: b1
+      occupant: !ruby/object:Knight
+        color: white
+        symbol: "♞"
+        piece_name: Knight
+    - !ruby/object:Square
+      position: c1
+      occupant: 
+    - !ruby/object:Square
+      position: d1
+      occupant: 
+    - !ruby/object:Square
+      position: e1
+      occupant: !ruby/object:King
+        color: white
+        symbol: "♚"
+        start_position: true
+        piece_name: King
+    - !ruby/object:Square
+      position: f1
+      occupant: !ruby/object:Bishop
+        color: white
+        piece_name: Bishop
+        symbol: "♝"
+    - !ruby/object:Square
+      position: g1
+      occupant: 
+    - !ruby/object:Square
+      position: h1
+      occupant: !ruby/object:Tower
+        color: white
+        symbol: "♜"
+        start_position: true
+        piece_name: Tower
+selected_square: 
+white: &2 !ruby/object:Player
+  name: Luke
+  color: white
+black: &1 !ruby/object:Player
+  name: Anakin
+  color: black
+active_player: *1
+inactive_player: *2
